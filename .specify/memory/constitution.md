@@ -1,50 +1,91 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Versión: (plantilla) → 1.0.0
+- Principios añadidos: I. Claridad, II. Arquitectura en capas, III. Pruebas mínimas,
+  IV. Accesibilidad, V. Código en inglés, documentación en español
+- Secciones añadidas: Restricciones técnicas, Flujo de trabajo, Gobernanza
+- Plantillas revisadas: plan-template.md (Constitution Check usa estos principios) ✅,
+  spec-template.md ✅, tasks-template.md ✅
+- TODOs pendientes: ninguno
+-->
 
-## Core Principles
+# Constitución del proyecto Festival de Artes Vivas Loja
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## Principios fundamentales
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### I. Claridad antes que astucia
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+El código y la documentación se escriben para que cualquier integrante del equipo los
+entienda en la primera lectura.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+- Nombres descriptivos; funciones cortas con una sola responsabilidad.
+- Nada de abstracciones "por si acaso" (YAGNI): solo se agrega complejidad que un
+  requisito del spec justifique, y se registra en la sección *Complexity Tracking* del plan.
+- Cada decisión de arquitectura relevante se documenta en un ADR (`docs/adr/`).
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. Arquitectura en capas (NO NEGOCIABLE)
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+El sistema es cliente-servidor y el backend se organiza en capas con dependencias en un
+solo sentido:
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+`routes → controllers → services → repositories → Prisma/SQLite`
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- Los **controllers** solo traducen HTTP ↔ dominio (validan entrada, devuelven códigos de
+  estado). No contienen reglas de negocio.
+- Los **services** contienen las reglas de negocio (por ejemplo, el control de aforo).
+- Los **repositories** son la única capa que accede a la base de datos.
+- El **frontend** es solo presentación: consume la API REST y nunca calcula reglas de
+  negocio (aforo disponible, permisos) por su cuenta.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### III. Pruebas mínimas obligatorias
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+- Toda regla de negocio en un service tiene al menos una prueba unitaria.
+- Todo endpoint nuevo tiene al menos una prueba de integración del caso feliz y una del
+  caso de error principal.
+- `npm test` debe pasar antes de abrir un Pull Request. Un PR con pruebas en rojo no se
+  integra.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### IV. Accesibilidad
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+La interfaz debe poder usarse con teclado y lector de pantalla:
+
+- HTML semántico (`header`, `nav`, `main`, `footer`, encabezados en orden).
+- Todo control interactivo es alcanzable con teclado y tiene foco visible.
+- Imágenes con `alt`; formularios con `label` asociado; contraste mínimo WCAG 2.1 AA.
+- Diseño responsive (se usa desde celulares durante el festival).
+
+### V. Código en inglés, documentación en español
+
+- Identificadores, nombres de archivos, rutas de la API y modelos de datos: **inglés**
+  (`Event`, `Performance`, `GET /api/performances`).
+- Specs, planes, ADR, README, CONTRIBUTING, comentarios explicativos y textos de la
+  interfaz: **español**.
+- Mensajes de commit: tipo de Conventional Commits en inglés (`feat:`, `fix:`…) y
+  descripción en español.
+
+## Restricciones técnicas
+
+- Stack: React + Vite + TypeScript + TailwindCSS (frontend); Node.js + Express +
+  TypeScript (backend); SQLite + Prisma (persistencia). Cambiarlo requiere un ADR nuevo.
+- El proyecto debe correr en local con `npm install` y `npm run dev`, en Linux (incluida
+  Chromebook) sin dependencias específicas de Windows ni servicios externos de pago.
+- Ningún secreto se versiona: se usa `.env` (ignorado) y `.env.example` (versionado).
+
+## Flujo de trabajo
+
+- Specification-Driven Development con GitHub Spec Kit: ninguna funcionalidad se
+  implementa sin `spec.md`, `plan.md` y `tasks.md` en `specs/<nnn-nombre>/`.
+- Ramas: `main` (estable) ← `develop` (integración) ← `feature/spec-N-nombre`.
+  Nada se integra a `main` o `develop` sin Pull Request revisado por otro integrante.
+- Commits pequeños con Conventional Commits; cada commit compila.
+
+## Gobernanza
+
+- Esta constitución prevalece sobre cualquier otra guía del repositorio.
+- Todo PR debe verificar el cumplimiento de los cinco principios (la plantilla de PR
+  incluye la lista de verificación).
+- Enmiendas: se proponen por PR, requieren aprobación de los tres integrantes y
+  actualizan la versión (MAJOR: se elimina o redefine un principio; MINOR: se agrega un
+  principio o sección; PATCH: redacción).
+
+**Version**: 1.0.0 | **Ratified**: 2026-11-18 | **Last Amended**: 2026-11-18
