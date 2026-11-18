@@ -54,8 +54,8 @@ funciones con aforo limitado. Los organizadores necesitan **mantener la programa
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | React 19 · Vite 6 · TypeScript · TailwindCSS 4 · React Router 7 |
-| Backend | Node.js ≥ 20 · Express 5 · TypeScript · Zod |
+| Frontend | React 19 · Vite 7 · TypeScript · TailwindCSS 4 · React Router 7 |
+| Backend | Node.js ≥ 20.12 · Express 5 · TypeScript · Zod |
 | Base de datos | SQLite · Prisma ORM (migraciones + seed) |
 | Pruebas | Vitest · Supertest · Testing Library |
 | Calidad | ESLint · Prettier · GitHub Actions (CI) |
@@ -66,7 +66,7 @@ La justificación está en [ADR-0002](docs/adr/0002-eleccion-del-stack.md) y
 
 ## Instalación y ejecución en local
 
-**Requisitos:** Git y Node.js 20 o superior (incluye npm). Funciona en Linux, macOS,
+**Requisitos:** Git y Node.js 20.12 o superior, con npm (recomendado: Node 22 LTS, ver `.nvmrc`). Funciona en Linux, macOS,
 Windows y en Chromebook con el entorno Linux activado.
 
 ```bash

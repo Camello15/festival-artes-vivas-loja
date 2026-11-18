@@ -7,7 +7,7 @@ Esta guía explica cómo trabajamos en el repositorio. Léela completa antes de 
 | Herramienta | Versión mínima | Para qué |
 |---|---|---|
 | Git | 2.30 | Control de versiones |
-| Node.js | 20 LTS | Frontend y backend |
+| Node.js | 20.12 (recomendado 22 LTS) | Frontend y backend |
 | npm | 10 | Gestor de paquetes (workspaces) |
 | uv | 0.4 | Instalar Spec Kit (`specify-cli`) |
 | GitHub CLI (`gh`) | 2.40 | Abrir Pull Requests desde la terminal (opcional) |
@@ -26,6 +26,15 @@ cp apps/api/.env.example apps/api/.env
 npm run db:setup      # crea la base SQLite, aplica migraciones y carga datos de ejemplo
 npm run dev           # web en http://localhost:5173 · API en http://localhost:3000
 ```
+
+### Problemas frecuentes
+
+| Síntoma | Solución |
+|---|---|
+| `npm warn install-scripts` o `Cannot find module '.prisma/client'` | Con npm 11+, los scripts de instalación de Prisma y esbuild ya están aprobados en `allowScripts` del `package.json` raíz. Si agregas una dependencia con scripts, ejecuta `npm install-scripts ls` y apruébala con `npm install-scripts approve <paquete>`. |
+| `DATABASE_URL es obligatoria` | Falta `apps/api/.env`: `cp apps/api/.env.example apps/api/.env`. |
+| La página de inicio dice "No pudimos conectar con el servidor" | La API no está corriendo o falta `npm run db:setup`. |
+| Puerto 3000 o 5173 ocupado | Cambia `PORT` en `apps/api/.env` o ejecuta `WEB_PORT=5174 npm run dev`. |
 
 ## 3. Ramas
 

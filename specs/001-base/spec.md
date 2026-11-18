@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-18
 
-**Status**: Approved
+**Status**: Implemented
 
 **Owner**: Camilo Velepucha (líder)
 
@@ -28,7 +28,7 @@ base de datos con pocos comandos, para empezar a trabajar en mi spec el mismo d�
 
 **Why this priority**: Sin esto ningún otro spec puede comenzar.
 
-**Independent Test**: En una máquina Linux limpia con Node.js 20+, ejecutar
+**Independent Test**: En una máquina Linux limpia con Node.js 20.12+, ejecutar
 `npm install`, `npm run db:setup` y `npm run dev`. La web responde en
 `http://localhost:5173` y `GET http://localhost:3000/api/health` responde `200`.
 
