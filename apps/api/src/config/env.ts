@@ -1,4 +1,11 @@
+import { existsSync } from 'node:fs';
 import { z } from 'zod';
+
+// Carga apps/api/.env si existe. Las variables ya definidas en el entorno
+// (por ejemplo, en Docker o en las pruebas) tienen prioridad sobre el archivo.
+if (existsSync('.env')) {
+  process.loadEnvFile('.env');
+}
 
 // Variables de entorno validadas al arrancar: si falta algo, la API falla
 // de inmediato con un mensaje claro en lugar de fallar más tarde.
