@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+build/
+*.tsbuildinfo
+
+# Variables de entorno (usar .env.example como referencia)
+.env
+.env.*
+!.env.example
+
+# Base de datos SQLite local
+*.db
+*.db-journal
+
+# Logs y temporales
+*.log
+npm-debug.log*
+coverage/
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
