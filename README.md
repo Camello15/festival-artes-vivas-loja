@@ -47,8 +47,8 @@ funciones con aforo limitado. Los organizadores necesitan **mantener la programa
 | Integrante | GitHub | Rol | Spec | Rama |
 |---|---|---|---|---|
 | **Camilo Velepucha** | [@Camello15](https://github.com/Camello15) | Líder técnico | [#1 Base del proyecto](specs/001-base/spec.md) | `feature/spec-1-base` |
-| **Cristina Feijo** | `<usuario2>` | Desarrolladora | [#2 Cartelera y detalle](specs/002-cartelera/spec.md) | `feature/spec-2-cartelera` |
-| **Bryan Villa** | `<usuario3>` | Desarrollador | [#3 Reservas y administración](specs/003-reservas/spec.md) | `feature/spec-3-reservas` |
+| **Cristina Feijo** | [@CristinaFeijoo](https://github.com/CristinaFeijoo) | Desarrolladora | [#2 Cartelera y detalle](specs/002-cartelera/spec.md) | `feature/spec-2-cartelera` |
+| **Bryan Villa** | [@BryanVilla2000](https://github.com/BryanVilla2000) | Desarrollador | [#3 Reservas y administración](specs/003-reservas/spec.md) | `feature/spec-3-reservas` |
 
 ## Stack tecnológico
 
