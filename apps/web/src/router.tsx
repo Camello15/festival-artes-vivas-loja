@@ -1,7 +1,8 @@
-import { createBrowserRouter, type RouteObject } from 'react-router';
+﻿import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from './components/layout/Layout';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { ProgramPage } from './pages/ProgramPage';
 import {
   AdminPage,
   ArtistAgendaPage,
@@ -10,7 +11,6 @@ import {
   EventDetailPage,
   LoginPage,
   MyReservationsPage,
-  ProgramPage,
   RegisterPage,
   ReservePage,
   VenueDetailPage,
