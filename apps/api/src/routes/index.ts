@@ -8,6 +8,7 @@ import { adminVenuesRouter } from '../modules/admin/venues/admin-venues.routes';
 import { adminArtistsRouter } from '../modules/admin/artists/admin-artists.routes';
 import { adminEventsRouter } from '../modules/admin/events/admin-events.routes';
 import { adminPerformancesRouter } from '../modules/admin/performances/admin-performances.routes';
+import { artistAgendaRouter } from '../modules/artist-agenda/artist-agenda.routes';
 
 import { performancesRouter } from '../modules/performances/performances.routes';
 import { eventsRouter } from '../modules/events/events.routes';
@@ -22,6 +23,7 @@ apiRouter.use('/festival', festivalRouter);
 // Spec #3: autenticación y reservas
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/reservations', reservationsRouter);
+apiRouter.use('/me/artist/performances', artistAgendaRouter);
 apiRouter.use('/admin/venues', adminVenuesRouter);
 apiRouter.use('/admin/artists', adminArtistsRouter);
 apiRouter.use('/admin/events', adminEventsRouter);
