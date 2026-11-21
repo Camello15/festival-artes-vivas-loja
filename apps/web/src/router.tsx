@@ -1,20 +1,20 @@
-import { createBrowserRouter, type RouteObject } from 'react-router';
+﻿import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from './components/layout/Layout';
+import { ArtistDetailPage } from './pages/ArtistDetailPage';
+import { ArtistsPage } from './pages/ArtistsPage';
+import { EventDetailPage } from './pages/EventDetailPage';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { ProgramPage } from './pages/ProgramPage';
+import { VenueDetailPage } from './pages/VenueDetailPage';
+import { VenuesPage } from './pages/VenuesPage';
 import {
   AdminPage,
   ArtistAgendaPage,
-  ArtistDetailPage,
-  ArtistsPage,
-  EventDetailPage,
   LoginPage,
   MyReservationsPage,
-  ProgramPage,
   RegisterPage,
   ReservePage,
-  VenueDetailPage,
-  VenuesPage,
 } from './pages/placeholders';
 
 // Todas las rutas de la aplicación. Las URL están en español porque las ve el público.
