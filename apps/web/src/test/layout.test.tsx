@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+﻿import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderRoute } from './renderRoute';
@@ -40,7 +40,7 @@ describe('Layout y navegación', () => {
 
     expect(router.state.location.pathname).toBe('/cartelera');
     expect(screen.getByRole('heading', { level: 1, name: 'Cartelera' })).toBeInTheDocument();
-    expect(screen.getByText(/Spec #2, Cartelera y detalle/)).toBeInTheDocument();
+    expect(screen.getByRole('form', { name: 'Filtrar cartelera' })).toBeInTheDocument();
   });
 
   it('el botón del menú móvil informa si está abierto', async () => {

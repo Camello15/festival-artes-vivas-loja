@@ -1,23 +1,27 @@
-import { createBrowserRouter, type RouteObject } from 'react-router';
+﻿import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from './components/layout/Layout';
+
+import { ArtistDetailPage } from './pages/ArtistDetailPage';
+import { ArtistsPage } from './pages/ArtistsPage';
+import { EventDetailPage } from './pages/EventDetailPage';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { ProgramPage } from './pages/ProgramPage';
+import { VenueDetailPage } from './pages/VenueDetailPage';
+import { VenuesPage } from './pages/VenuesPage';
+
 import { AuthProvider } from './features/auth/AuthContext';
 import { ProtectedRoute } from './features/auth/ProtectedRoute';
+
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ReservePage } from './pages/ReservePage';
 import { MyReservationsPage } from './pages/MyReservationsPage';
 import { AdminVenuesPage } from './pages/admin/AdminVenuesPage';
+
 import {
   AdminPage,
   ArtistAgendaPage,
-  ArtistDetailPage,
-  ArtistsPage,
-  EventDetailPage,
-  ProgramPage,
-  VenueDetailPage,
-  VenuesPage,
 } from './pages/placeholders';
 
 // Todas las rutas de la aplicación. Las URL están en español porque las ve el público.
@@ -42,11 +46,26 @@ export const routes: RouteObject[] = [
       // Spec #3: Reservas y administración
       { path: 'ingresar', element: <LoginPage /> },
       { path: 'registro', element: <RegisterPage /> },
-      { path: 'reservar/:performanceId', element: <ProtectedRoute><ReservePage /></ProtectedRoute> },
-      { path: 'mis-reservas', element: <ProtectedRoute><MyReservationsPage /></ProtectedRoute> },
-      { path: 'mi-agenda', element: <ProtectedRoute roles={['ARTIST']}><ArtistAgendaPage /></ProtectedRoute> },
-      { path: 'admin/venues', element: <ProtectedRoute roles={['ADMIN']}><AdminVenuesPage /></ProtectedRoute> },
-      { path: 'admin/*', element: <ProtectedRoute roles={['ADMIN']}><AdminPage /></ProtectedRoute> },
+      {
+        path: 'reservar/:performanceId',
+        element: <ProtectedRoute><ReservePage /></ProtectedRoute>,
+      },
+      {
+        path: 'mis-reservas',
+        element: <ProtectedRoute><MyReservationsPage /></ProtectedRoute>,
+      },
+      {
+        path: 'mi-agenda',
+        element: <ProtectedRoute roles={['ARTIST']}><ArtistAgendaPage /></ProtectedRoute>,
+      },
+      {
+        path: 'admin/venues',
+        element: <ProtectedRoute roles={['ADMIN']}><AdminVenuesPage /></ProtectedRoute>,
+      },
+      {
+        path: 'admin/*',
+        element: <ProtectedRoute roles={['ADMIN']}><AdminPage /></ProtectedRoute>,
+      },
 
       { path: '*', element: <NotFoundPage /> },
     ],
