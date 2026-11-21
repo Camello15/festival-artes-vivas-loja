@@ -54,8 +54,8 @@ export interface ArtistListItem {
 }
 
 export interface ArtistDetail extends ArtistListItem {
-  biography: string;
-  websiteUrl: string | null;
+  bio: string;
+  website: string | null;
   events: Array<{
     id: number;
     title: string;
@@ -86,6 +86,6 @@ export interface EventDetail {
 }
 
 export interface VenueDetail extends VenueListItem {
-  description: string | null;
+  description: string;
   upcomingPerformances: PerformanceItem[];
 }

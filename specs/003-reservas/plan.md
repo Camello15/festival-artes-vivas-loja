@@ -12,7 +12,7 @@ arquitectura en capas del Spec #1.
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5, Node.js ≥ 20
+**Language/Version**: TypeScript 5, Node.js ≥ 20.12
 
 **Primary Dependencies**: las del Spec #1 más `jsonwebtoken` (+ `@types/jsonwebtoken`).
 `bcryptjs` ya está instalado.

@@ -1,20 +1,35 @@
-﻿export type Discipline = 'THEATER' | 'DANCE' | 'MUSIC' | 'CIRCUS' | 'STREET_ARTS';
-export type ArtistKind = 'SOLOIST' | 'COMPANY';
-export type AvailabilityStatus = 'AVAILABLE' | 'FEW_LEFT' | 'SOLD_OUT';
-export type PerformanceStatus = 'SCHEDULED' | 'CANCELLED' | 'COMPLETED';
+﻿// Textos en español para los valores enumerados de la API (principio V).
+// El color de cada disciplina es informativo: identifica la disciplina en toda la interfaz.
 
-export const DISCIPLINE_LABELS: Record<Discipline, string> = {
-  THEATER: 'Teatro',
-  DANCE: 'Danza',
-  MUSIC: 'Música',
-  CIRCUS: 'Circo',
-  STREET_ARTS: 'Artes de calle',
-};
+export const DISCIPLINES = [
+  { value: 'THEATER', label: 'Teatro', colorVar: '--color-theater' },
+  { value: 'DANCE', label: 'Danza', colorVar: '--color-dance' },
+  { value: 'MUSIC', label: 'Música', colorVar: '--color-music' },
+  { value: 'CIRCUS', label: 'Circo', colorVar: '--color-circus' },
+  { value: 'STREET_ARTS', label: 'Artes de calle', colorVar: '--color-street' },
+] as const;
+
+export type Discipline = (typeof DISCIPLINES)[number]['value'];
+export type ArtistKind = 'SOLO' | 'COMPANY';
+export type AvailabilityStatus = 'AVAILABLE' | 'FEW_LEFT' | 'SOLD_OUT';
+export type PerformanceStatus = 'SCHEDULED' | 'CANCELLED';
+
+export function disciplineLabel(value: string): string {
+  return DISCIPLINES.find((d) => d.value === value)?.label ?? value;
+}
+
+export function disciplineColorVar(value: string): string {
+  return DISCIPLINES.find((d) => d.value === value)?.colorVar ?? '--color-theater';
+}
 
 export const ARTIST_KIND_LABELS: Record<ArtistKind, string> = {
-  SOLOIST: 'Solista',
+  SOLO: 'Solista',
   COMPANY: 'Compañía',
 };
+
+export function artistKindLabel(kind: string): string {
+  return ARTIST_KIND_LABELS[kind as ArtistKind] ?? kind;
+}
 
 export const AVAILABILITY_LABELS: Record<AvailabilityStatus, string> = {
   AVAILABLE: 'Disponible',
@@ -22,14 +37,6 @@ export const AVAILABILITY_LABELS: Record<AvailabilityStatus, string> = {
   SOLD_OUT: 'Agotado',
 };
 
-export function getDisciplineLabel(discipline: string): string {
-  return DISCIPLINE_LABELS[discipline as Discipline] ?? discipline;
-}
-
-export function getArtistKindLabel(kind: string): string {
-  return ARTIST_KIND_LABELS[kind as ArtistKind] ?? kind;
-}
-
-export function getAvailabilityLabel(status: AvailabilityStatus): string {
+export function availabilityLabel(status: AvailabilityStatus): string {
   return AVAILABILITY_LABELS[status] ?? status;
 }
