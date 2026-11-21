@@ -55,7 +55,7 @@ description: "Lista de tareas del Spec #3 — Reservas y administración"
 - [X] T024 [P] [US4] CRUD admin de `artists` (API + pruebas + página; borrar con obras → 409)
 - [X] T025 [P] [US4] CRUD admin de `events` con `artistIds` (API + pruebas + página)
 - [X] T026 [US4] CRUD admin de `performances` con reglas de aforo, cancelación y lista de reservas (API + pruebas + páginas)
-- [ ] T027 [US4] Prueba de autorización: todos los `/api/admin/*` → 401 sin token y 403 con rol `PUBLIC`
+- [X] T027 [US4] Prueba de autorización: todos los `/api/admin/*` → 401 sin token y 403 con rol `PUBLIC`
 - [ ] T028 [US4] `AdminLayout` con navegación lateral y rutas `/admin/*` protegidas por rol
 - [ ] T029 [US4] Log de auditoría (`console.info` estructurado: usuario, acción, entidad, id) en services de admin y reservas
 
