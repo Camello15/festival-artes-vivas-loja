@@ -13,14 +13,14 @@ Specs #2 y #3.
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5 sobre Node.js ≥ 20
+**Language/Version**: TypeScript 5 sobre Node.js ≥ 20.12
 
-**Primary Dependencies**: Frontend: React 19, Vite 6, React Router 7, TailwindCSS 4.
-Backend: Express 5, Prisma 6, Zod (validación), bcryptjs, cors.
+**Primary Dependencies**: Frontend: React 19, Vite 7, React Router 7, TailwindCSS 4.
+Backend: Express 5, Prisma 6, Zod 4 (validación), bcryptjs, cors.
 
 **Storage**: SQLite (archivo `apps/api/prisma/dev.db`) mediante Prisma ORM con migraciones.
 
-**Testing**: Vitest en ambas apps; Supertest para integración HTTP; Testing Library para
+**Testing**: Vitest 5 en ambas apps; Supertest para integración HTTP; Testing Library para
 componentes React.
 
 **Target Platform**: Navegadores modernos (escritorio y móvil); servidor Node.js en Linux.
@@ -152,4 +152,4 @@ los nombres de componentes y archivos siguen en inglés.
 - **Conflictos en `schema.prisma`** entre los Specs #2 y #3: mitigado porque el modelo
   queda completo aquí. Si un spec necesita un campo, lo agrega como opcional y genera una
   migración nueva con nombre descriptivo.
-- **Versiones de Node distintas** entre integrantes: `engines.node >= 20` y `.nvmrc`.
+- **Versiones de Node distintas** entre integrantes: `engines.node >= 20.12` y `.nvmrc`.

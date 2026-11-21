@@ -19,13 +19,13 @@ necesitamos elegir tecnologías para el cliente y el servidor. Restricciones:
 | Capa | Tecnología | Motivo principal |
 |---|---|---|
 | Lenguaje | **TypeScript** en frontend y backend | Un solo lenguaje; tipos que documentan los contratos y detectan errores |
-| Frontend | **React 19 + Vite 6** | Ecosistema más conocido; Vite arranca en milisegundos y consume poca memoria |
+| Frontend | **React 19 + Vite 7** | Ecosistema más conocido; Vite arranca en milisegundos y consume poca memoria |
 | Enrutado web | **React Router 7** | Estándar de facto para SPA en React |
 | Estilos | **TailwindCSS 4** | Diseño responsive rápido sin escribir CSS a mano; plugin oficial para Vite |
-| Backend | **Node.js ≥ 20 + Express 5** | Minimalista, sin "magia"; las capas se ven explícitamente en el código; Express 5 propaga los errores async al middleware de errores |
-| Validación | **Zod** | Valida en tiempo de ejecución y genera los tipos de TypeScript |
+| Backend | **Node.js ≥ 20.12 + Express 5** | Minimalista, sin "magia"; las capas se ven explícitamente en el código; Express 5 propaga los errores async al middleware de errores |
+| Validación | **Zod 4** | Valida en tiempo de ejecución y genera los tipos de TypeScript |
 | Persistencia | **Prisma + SQLite** | Ver [ADR-0003](0003-base-de-datos-sqlite-prisma.md) |
-| Pruebas | **Vitest** (+ Supertest, Testing Library) | Un solo runner para las dos apps, compatible con Vite y rápido |
+| Pruebas | **Vitest 5** (+ Supertest, Testing Library) | Un solo runner para las dos apps, compatible con Vite y rápido |
 | Calidad | **ESLint 9 + Prettier** | Estilo uniforme entre los tres integrantes |
 | Cifrado | **bcryptjs** | Implementación en JavaScript puro: no requiere compilar código nativo |
 
@@ -50,3 +50,12 @@ necesitamos elegir tecnologías para el cliente y el servidor. Restricciones:
   (requiere internet en `npm install`).
 - **Seguimiento**: las versiones mayores están fijadas en `package.json`; actualizar una
   versión mayor requiere un PR propio (`chore:`).
+
+## Notas de implementación (Spec #1)
+
+- Durante la implementación se subió a **Vite 7, Vitest 5 y Zod 4** para resolver avisos de
+  seguridad de `npm audit` en `vitest`/`tinypool` y `zod`.
+- **Deuda técnica conocida**: `npm audit` reporta una vulnerabilidad *high* en `deepmerge-ts`
+  (dependencia del CLI de Prisma 6). Solo afecta a la herramienta de línea de comandos en
+  desarrollo, no al código de la API. Se corrige migrando a Prisma 7, que cambia la
+  configuración (`prisma.config.ts` y adaptadores de conexión); se hará en un PR `chore:` propio.
