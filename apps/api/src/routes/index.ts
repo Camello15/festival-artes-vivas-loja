@@ -5,6 +5,7 @@ import { festivalRouter } from '../modules/festival/festival.routes';
 import { authRouter } from '../modules/auth/auth.routes';
 import { reservationsRouter } from '../modules/reservations/reservations.routes';
 import { adminVenuesRouter } from '../modules/admin/venues/admin-venues.routes';
+import { adminArtistsRouter } from '../modules/admin/artists/admin-artists.routes';
 
 import { performancesRouter } from '../modules/performances/performances.routes';
 import { eventsRouter } from '../modules/events/events.routes';
@@ -20,6 +21,7 @@ apiRouter.use('/festival', festivalRouter);
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/reservations', reservationsRouter);
 apiRouter.use('/admin/venues', adminVenuesRouter);
+apiRouter.use('/admin/artists', adminArtistsRouter);
 
 // Spec #2: cartelera y catálogo
 apiRouter.use('/performances', performancesRouter);

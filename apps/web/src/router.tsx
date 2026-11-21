@@ -18,6 +18,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { ReservePage } from './pages/ReservePage';
 import { MyReservationsPage } from './pages/MyReservationsPage';
 import { AdminVenuesPage } from './pages/admin/AdminVenuesPage';
+import { AdminArtistsPage } from './pages/admin/AdminArtistsPage';
 
 import {
   AdminPage,
@@ -61,6 +62,10 @@ export const routes: RouteObject[] = [
       {
         path: 'admin/venues',
         element: <ProtectedRoute roles={['ADMIN']}><AdminVenuesPage /></ProtectedRoute>,
+      },
+      {
+        path: 'admin/artists',
+        element: <ProtectedRoute roles={['ADMIN']}><AdminArtistsPage /></ProtectedRoute>,
       },
       {
         path: 'admin/*',
