@@ -24,9 +24,6 @@ export const VenueDetailPage = () => (
 );
 
 // ---- Spec #3: Reservas y administración ----
-export const ArtistAgendaPage = () => (
-  <ComingSoon spec={3} title="Mi agenda" description="Tus funciones como artista y cuántas entradas se han reservado." />
-);
 export const AdminPage = () => (
   <ComingSoon spec={3} title="Administración" description="Gestión de obras, funciones, artistas y escenarios, y lista de reservas por función." />
 );

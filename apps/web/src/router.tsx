@@ -17,6 +17,7 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ReservePage } from './pages/ReservePage';
 import { MyReservationsPage } from './pages/MyReservationsPage';
+import { ArtistAgendaPage } from './pages/ArtistAgendaPage';
 import { AdminVenuesPage } from './pages/admin/AdminVenuesPage';
 import { AdminArtistsPage } from './pages/admin/AdminArtistsPage';
 import { AdminEventsPage } from './pages/admin/AdminEventsPage';
@@ -24,10 +25,7 @@ import { AdminPerformancesPage } from './pages/admin/AdminPerformancesPage';
 import { AdminPerformanceReservationsPage } from './pages/admin/AdminPerformanceReservationsPage';
 import { AdminLayout } from './pages/admin/AdminLayout';
 
-import {
-  AdminPage,
-  ArtistAgendaPage,
-} from './pages/placeholders';
+import { AdminPage } from './pages/placeholders';
 
 // Todas las rutas de la aplicación. Las URL están en español porque las ve el público.
 export const routes: RouteObject[] = [

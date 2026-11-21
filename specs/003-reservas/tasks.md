@@ -62,7 +62,7 @@ description: "Lista de tareas del Spec #3 — Reservas y administración"
 ## Phase 7: User Story 5 — Agenda del artista (P3)
 
 - [X] T030 [US5] `GET /api/me/artist/performances` (rol `ARTIST`) con prueba
-- [ ] T031 [US5] Crear `ArtistAgendaPage.tsx` (`/mi-agenda`)
+- [X] T031 [US5] Crear `ArtistAgendaPage.tsx` (`/mi-agenda`)
 
 ## Phase 8: Polish
 
