@@ -1,5 +1,6 @@
 ﻿import { api } from '../../lib/api';
 import type {
+  EventDetail,
   PerformanceFiltersResponse,
   PerformanceItem,
   PerformanceQuery,
@@ -20,4 +21,8 @@ export function getPerformances(query: PerformanceQuery = {}) {
 
 export function getPerformanceFilters() {
   return api.get<PerformanceFiltersResponse>('/performances/filters');
+}
+
+export function getEventById(id: number | string) {
+  return api.get<EventDetail>(`/events/${id}`);
 }
