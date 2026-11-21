@@ -1,5 +1,7 @@
 ﻿import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from './components/layout/Layout';
+import { ArtistDetailPage } from './pages/ArtistDetailPage';
+import { ArtistsPage } from './pages/ArtistsPage';
 import { EventDetailPage } from './pages/EventDetailPage';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -7,8 +9,6 @@ import { ProgramPage } from './pages/ProgramPage';
 import {
   AdminPage,
   ArtistAgendaPage,
-  ArtistDetailPage,
-  ArtistsPage,
   LoginPage,
   MyReservationsPage,
   RegisterPage,

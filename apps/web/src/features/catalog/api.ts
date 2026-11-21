@@ -1,5 +1,7 @@
 ﻿import { api } from '../../lib/api';
 import type {
+  ArtistDetail,
+  ArtistListItem,
   EventDetail,
   PerformanceFiltersResponse,
   PerformanceItem,
@@ -25,4 +27,14 @@ export function getPerformanceFilters() {
 
 export function getEventById(id: number | string) {
   return api.get<EventDetail>(`/events/${id}`);
+}
+
+export function getArtists(search?: string) {
+  const trimmed = search?.trim();
+  const qs = trimmed ? `?search=${encodeURIComponent(trimmed)}` : '';
+  return api.get<ArtistListItem[]>(`/artists${qs}`);
+}
+
+export function getArtistById(id: number | string) {
+  return api.get<ArtistDetail>(`/artists/${id}`);
 }
