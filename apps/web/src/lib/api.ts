@@ -21,10 +21,16 @@ export class ApiError extends Error {
 const BASE_URL = import.meta.env.VITE_API_URL ?? '/api';
 
 let authToken: string | null = null;
+let unauthorizedHandler: (() => void) | null = null;
 
 /** Lo usará el Spec #3 tras iniciar sesión. */
 export function setAuthToken(token: string | null) {
   authToken = token;
+}
+
+/** La capa de autenticación puede registrar su logout para respuestas 401. */
+export function setUnauthorizedHandler(handler: (() => void) | null) {
+  unauthorizedHandler = handler;
 }
 
 export async function apiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -45,6 +51,11 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
   const body: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (response.status === 401) {
+      authToken = null;
+      unauthorizedHandler?.();
+    }
+
     const error = (body as ApiErrorBody | null)?.error;
     throw new ApiError(
       response.status,
