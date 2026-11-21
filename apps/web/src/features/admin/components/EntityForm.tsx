@@ -3,7 +3,7 @@ import { useState, type FormEvent } from 'react';
 export interface EntityFormField {
   name: string;
   label: string;
-  type?: 'text' | 'email' | 'url' | 'number' | 'date' | 'datetime-local' | 'textarea' | 'select';
+  type?: 'text' | 'email' | 'url' | 'number' | 'date' | 'datetime-local' | 'textarea' | 'select' | 'multiselect';
   required?: boolean;
   placeholder?: string;
   min?: number;
@@ -96,6 +96,18 @@ export function EntityForm({
             </label>
             {field.type === 'textarea' ? (
               <textarea {...commonProps} placeholder={field.placeholder} />
+            ) : field.type === 'multiselect' ? (
+              <select
+                {...commonProps}
+                multiple
+                value={(values[field.name] ?? '').split(',').filter(Boolean)}
+                onChange={(event) => updateValue(
+                  field.name,
+                  Array.from(event.currentTarget.selectedOptions, (option) => option.value).join(','),
+                )}
+              >
+                {field.options?.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
             ) : field.type === 'select' ? (
               <select {...commonProps}>
                 <option value="">Selecciona una opción</option>

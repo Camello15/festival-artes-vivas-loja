@@ -65,3 +65,51 @@ export function updateAdminArtist(id: number, data: AdminArtistInput) {
 export function deleteAdminArtist(id: number) {
   return api.delete<void>(`/admin/artists/${id}`);
 }
+
+export interface AdminEventArtist {
+  id: number;
+  name: string;
+  kind: 'SOLO' | 'COMPANY';
+  country: string;
+}
+
+export interface AdminEvent {
+  id: number;
+  title: string;
+  discipline: string;
+  synopsis: string;
+  durationMinutes: number;
+  ageRating: string;
+  imageUrl: string | null;
+  artists: AdminEventArtist[];
+}
+
+export interface AdminEventInput {
+  title: string;
+  discipline: string;
+  synopsis: string;
+  durationMinutes: number;
+  ageRating: string;
+  imageUrl: string | null;
+  artistIds: number[];
+}
+
+export function getAdminEvents() {
+  return api.get<AdminEvent[]>('/admin/events');
+}
+
+export function getAdminEvent(id: number) {
+  return api.get<AdminEvent>(`/admin/events/${id}`);
+}
+
+export function createAdminEvent(data: AdminEventInput) {
+  return api.post<AdminEvent>('/admin/events', data);
+}
+
+export function updateAdminEvent(id: number, data: AdminEventInput) {
+  return api.put<AdminEvent>(`/admin/events/${id}`, data);
+}
+
+export function deleteAdminEvent(id: number) {
+  return api.delete<void>(`/admin/events/${id}`);
+}

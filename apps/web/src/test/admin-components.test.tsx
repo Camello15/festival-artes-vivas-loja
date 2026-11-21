@@ -69,6 +69,29 @@ describe('EntityForm', () => {
     await actor.click(screen.getByRole('button', { name: 'Cancelar' }));
     expect(onCancel).toHaveBeenCalledOnce();
   });
+
+  it('permite seleccionar varias opciones y las conserva como valores separados', async () => {
+    const actor = userEvent.setup();
+    const onSubmit = vi.fn();
+    render(
+      <EntityForm
+        fields={[{
+          name: 'artistIds',
+          label: 'Artistas',
+          type: 'multiselect',
+          options: [{ value: '12', label: 'Compañía Loja' }, { value: '21', label: 'Dúo Andino' }],
+        }]}
+        onSubmit={onSubmit}
+        onCancel={vi.fn()}
+      />,
+    );
+
+    const artists = screen.getByRole('listbox', { name: 'Artistas' });
+    await actor.selectOptions(artists, ['12', '21']);
+    await actor.click(screen.getByRole('button', { name: 'Guardar' }));
+
+    expect(onSubmit).toHaveBeenCalledWith({ artistIds: '12,21' });
+  });
 });
 
 describe('ConfirmDialog compartido', () => {
