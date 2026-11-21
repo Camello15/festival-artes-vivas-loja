@@ -15,7 +15,7 @@ description: "Lista de tareas del Spec #2 — Cartelera y detalle"
 ## Phase 1: Setup
 
 - [ ] T001 Actualizar la rama: `git merge origin/develop`; `npm install && npm run db:setup && npm test` en verde
-- [ ] T002 [P] Ampliar `apps/web/src/lib/labels.ts` (ya trae las disciplinas y sus colores del Spec #1) con tipo de artista y disponibilidad
+- [ ] T002 [P] Crear `apps/web/src/lib/labels.ts` con etiquetas en español de disciplinas, tipo de artista y disponibilidad
 - [ ] T003 [P] Crear `apps/web/src/features/catalog/types.ts` con los tipos de respuesta de los contratos de `plan.md`
 
 ## Phase 2: Foundational

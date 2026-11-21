@@ -12,7 +12,7 @@ pantallas públicas de consulta con filtros sincronizados a la URL.
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5, Node.js ≥ 20.12
+**Language/Version**: TypeScript 5, Node.js ≥ 20
 
 **Primary Dependencies**: las del Spec #1. **No se agregan dependencias nuevas** (mapa con
 iframe de OpenStreetMap; fechas con `Intl.DateTimeFormat`).
