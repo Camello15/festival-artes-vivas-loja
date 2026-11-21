@@ -1,5 +1,6 @@
 import { PerformanceStatus } from '../../../domain/enums';
 import { AppError } from '../../../errors/AppError';
+import { logAudit } from '../../../lib/auditLog';
 import { ensureSqliteBusyTimeout } from '../../../lib/prisma';
 import { performancesRepository } from '../../performances/performances.repository';
 import {
@@ -51,16 +52,17 @@ export function createAdminPerformancesService(
       return withReservedSeats(performance);
     },
 
-    async create(input: PerformanceInput) {
+    async create(input: PerformanceInput, userId: number) {
       await prepareSqlite();
       const created = await repository.transaction(async (tx) => {
         await validateReferences(tx, input);
         return repository.create(tx, input);
       });
+      logAudit({ userId, action: 'CREATE', entity: 'Performance', entityId: created.id });
       return withReservedSeats(created);
     },
 
-    async update(id: number, input: PerformanceInput) {
+    async update(id: number, input: PerformanceInput, userId: number) {
       await prepareSqlite();
       const updated = await repository.transaction(async (tx) => {
         const current = await repository.findInTransaction(tx, id);
@@ -81,12 +83,19 @@ export function createAdminPerformancesService(
         if (input.status === PerformanceStatus.CANCELLED) {
           await repository.cancelConfirmedReservations(tx, id);
         }
-        return result;
+        return { performance: result, cancelled: input.status === PerformanceStatus.CANCELLED
+          && current.status !== PerformanceStatus.CANCELLED };
       });
-      return withReservedSeats(updated);
+      logAudit({
+        userId,
+        action: updated.cancelled ? 'CANCEL' : 'UPDATE',
+        entity: 'Performance',
+        entityId: id,
+      });
+      return withReservedSeats(updated.performance);
     },
 
-    async cancel(id: number) {
+    async cancel(id: number, userId: number) {
       await prepareSqlite();
       const result = await repository.transaction(async (tx) => {
         const current = await repository.findInTransaction(tx, id);
@@ -98,6 +107,7 @@ export function createAdminPerformancesService(
         const cancellation = await repository.cancelConfirmedReservations(tx, id);
         return { performance, cancelledReservations: cancellation.count };
       });
+      logAudit({ userId, action: 'CANCEL', entity: 'Performance', entityId: id });
       return { ...result, performance: await withReservedSeats(result.performance) };
     },
 
@@ -107,13 +117,14 @@ export function createAdminPerformancesService(
       return { performanceId: id, ...result };
     },
 
-    async delete(id: number) {
+    async delete(id: number, userId: number) {
       await this.get(id);
       const result = await repository.deleteIfWithoutReservations(id);
       if (result === 'missing') throw AppError.notFound('Función no encontrada');
       if (result === 'has-reservations') {
         throw AppError.conflict('No se puede eliminar una función que tiene reservas; cancélala para conservar su historial');
       }
+      logAudit({ userId, action: 'DELETE', entity: 'Performance', entityId: id });
     },
   };
 }

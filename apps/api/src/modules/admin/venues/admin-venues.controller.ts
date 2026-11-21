@@ -14,19 +14,19 @@ export const adminVenuesController = {
 
   async create(req: Request, res: Response) {
     const input = createVenueSchema.parse(req.body);
-    const venue = await adminVenuesService.create(input);
+    const venue = await adminVenuesService.create(input, req.user!.id);
     res.status(201).json(venue);
   },
 
   async update(req: Request, res: Response) {
     const id = venueIdSchema.parse(req.params.id);
     const input = updateVenueSchema.parse(req.body);
-    res.status(200).json(await adminVenuesService.update(id, input));
+    res.status(200).json(await adminVenuesService.update(id, input, req.user!.id));
   },
 
   async delete(req: Request, res: Response) {
     const id = venueIdSchema.parse(req.params.id);
-    await adminVenuesService.delete(id);
+    await adminVenuesService.delete(id, req.user!.id);
     res.sendStatus(204);
   },
 };

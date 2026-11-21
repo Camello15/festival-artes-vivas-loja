@@ -14,18 +14,18 @@ export const adminEventsController = {
 
   async create(req: Request, res: Response) {
     const input = createEventSchema.parse(req.body);
-    res.status(201).json(await adminEventsService.create(input));
+    res.status(201).json(await adminEventsService.create(input, req.user!.id));
   },
 
   async update(req: Request, res: Response) {
     const id = eventIdSchema.parse(req.params.id);
     const input = updateEventSchema.parse(req.body);
-    res.status(200).json(await adminEventsService.update(id, input));
+    res.status(200).json(await adminEventsService.update(id, input, req.user!.id));
   },
 
   async delete(req: Request, res: Response) {
     const id = eventIdSchema.parse(req.params.id);
-    await adminEventsService.delete(id);
+    await adminEventsService.delete(id, req.user!.id);
     res.sendStatus(204);
   },
 };

@@ -14,19 +14,19 @@ export const adminArtistsController = {
 
   async create(req: Request, res: Response) {
     const input = createArtistSchema.parse(req.body);
-    const artist = await adminArtistsService.create(input);
+    const artist = await adminArtistsService.create(input, req.user!.id);
     res.status(201).json(artist);
   },
 
   async update(req: Request, res: Response) {
     const id = artistIdSchema.parse(req.params.id);
     const input = updateArtistSchema.parse(req.body);
-    res.status(200).json(await adminArtistsService.update(id, input));
+    res.status(200).json(await adminArtistsService.update(id, input, req.user!.id));
   },
 
   async delete(req: Request, res: Response) {
     const id = artistIdSchema.parse(req.params.id);
-    await adminArtistsService.delete(id);
+    await adminArtistsService.delete(id, req.user!.id);
     res.sendStatus(204);
   },
 };

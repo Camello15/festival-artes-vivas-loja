@@ -1,6 +1,7 @@
 import { randomInt } from 'node:crypto';
 import { PerformanceStatus, ReservationStatus } from '../../domain/enums';
 import { AppError } from '../../errors/AppError';
+import { logAudit } from '../../lib/auditLog';
 import { ensureSqliteBusyTimeout, prisma } from '../../lib/prisma';
 import {
   reservationsRepository,
@@ -79,7 +80,9 @@ export function createReservationsService(
 
       for (let attempt = 0; attempt < CODE_COLLISION_ATTEMPTS; attempt += 1) {
         try {
-          return await reserveOnce(userId, performanceId, quantity);
+          const reservation = await reserveOnce(userId, performanceId, quantity);
+          logAudit({ userId, action: 'RESERVE', entity: 'Reservation', entityId: reservation.id });
+          return reservation;
         } catch (error) {
           if (isPrismaCode(error, 'P2003')) {
             throw AppError.notFound('Función no encontrada');
@@ -98,7 +101,7 @@ export function createReservationsService(
 
     async cancel(userId: number, reservationId: number) {
       await prepareSqlite();
-      return client.$transaction(
+      const reservation = await client.$transaction(
         async (tx) => {
           const reservation = await repository.findByIdForUser(tx, reservationId, userId);
           if (!reservation) throw AppError.notFound('Reserva no encontrada');
@@ -110,6 +113,8 @@ export function createReservationsService(
         },
         { maxWait: TRANSACTION_MAX_WAIT_MS, timeout: TRANSACTION_TIMEOUT_MS },
       );
+      logAudit({ userId, action: 'CANCEL', entity: 'Reservation', entityId: reservationId });
+      return reservation;
     },
   };
 }

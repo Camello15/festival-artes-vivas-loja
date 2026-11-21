@@ -14,18 +14,18 @@ export const adminPerformancesController = {
 
   async create(req: Request, res: Response) {
     const input = createPerformanceSchema.parse(req.body);
-    res.status(201).json(await adminPerformancesService.create(input));
+    res.status(201).json(await adminPerformancesService.create(input, req.user!.id));
   },
 
   async update(req: Request, res: Response) {
     const id = performanceIdSchema.parse(req.params.id);
     const input = updatePerformanceSchema.parse(req.body);
-    res.status(200).json(await adminPerformancesService.update(id, input));
+    res.status(200).json(await adminPerformancesService.update(id, input, req.user!.id));
   },
 
   async cancel(req: Request, res: Response) {
     const id = performanceIdSchema.parse(req.params.id);
-    res.status(200).json(await adminPerformancesService.cancel(id));
+    res.status(200).json(await adminPerformancesService.cancel(id, req.user!.id));
   },
 
   async listReservations(req: Request, res: Response) {
@@ -35,7 +35,7 @@ export const adminPerformancesController = {
 
   async delete(req: Request, res: Response) {
     const id = performanceIdSchema.parse(req.params.id);
-    await adminPerformancesService.delete(id);
+    await adminPerformancesService.delete(id, req.user!.id);
     res.sendStatus(204);
   },
 };

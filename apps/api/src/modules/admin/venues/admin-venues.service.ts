@@ -1,4 +1,5 @@
 import { AppError } from '../../../errors/AppError';
+import { logAudit } from '../../../lib/auditLog';
 import { adminVenuesRepository, type AdminVenuesRepository } from './admin-venues.repository';
 import type { VenueInput } from './admin-venues.schemas';
 
@@ -18,16 +19,20 @@ export function createAdminVenuesService(repository: AdminVenuesRepository = adm
       return venue;
     },
 
-    create(data: VenueInput) {
-      return repository.create(data);
+    async create(data: VenueInput, userId: number) {
+      const venue = await repository.create(data);
+      logAudit({ userId, action: 'CREATE', entity: 'Venue', entityId: venue.id });
+      return venue;
     },
 
-    async update(id: number, data: VenueInput) {
+    async update(id: number, data: VenueInput, userId: number) {
       await this.get(id);
-      return repository.update(id, data);
+      const venue = await repository.update(id, data);
+      logAudit({ userId, action: 'UPDATE', entity: 'Venue', entityId: id });
+      return venue;
     },
 
-    async delete(id: number) {
+    async delete(id: number, userId: number) {
       await this.get(id);
       if (await repository.countPerformances(id) > 0) {
         throw AppError.conflict('No se puede eliminar un escenario que tiene funciones asociadas');
@@ -35,6 +40,7 @@ export function createAdminVenuesService(repository: AdminVenuesRepository = adm
 
       try {
         await repository.delete(id);
+        logAudit({ userId, action: 'DELETE', entity: 'Venue', entityId: id });
       } catch (error) {
         // La FK Restrict protege también frente a una función creada concurrentemente.
         if (isPrismaCode(error, 'P2003')) {

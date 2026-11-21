@@ -1,4 +1,5 @@
 import { AppError } from '../../../errors/AppError';
+import { logAudit } from '../../../lib/auditLog';
 import { adminEventsRepository, type AdminEventsRepository } from './admin-events.repository';
 import type { EventInput } from './admin-events.schemas';
 
@@ -27,16 +28,20 @@ export function createAdminEventsService(repository: AdminEventsRepository = adm
       }
     },
 
-    async create(input: EventInput) {
+    async create(input: EventInput, userId: number) {
       await this.validateArtists(input.artistIds);
-      return repository.create(input);
+      const event = await repository.create(input);
+      logAudit({ userId, action: 'CREATE', entity: 'Event', entityId: event.id });
+      return event;
     },
 
-    async update(id: number, input: EventInput) {
+    async update(id: number, input: EventInput, userId: number) {
       await this.get(id);
       await this.validateArtists(input.artistIds);
       try {
-        return await repository.update(id, input);
+        const event = await repository.update(id, input);
+        logAudit({ userId, action: 'UPDATE', entity: 'Event', entityId: id });
+        return event;
       } catch (error) {
         if (isPrismaCode(error, 'P2025')) {
           throw new AppError('VALIDATION_ERROR', 'Uno o más artistas ya no están disponibles', [
@@ -47,11 +52,12 @@ export function createAdminEventsService(repository: AdminEventsRepository = adm
       }
     },
 
-    async delete(id: number) {
+    async delete(id: number, userId: number) {
       await this.get(id);
       if (!await repository.deleteIfWithoutPerformances(id)) {
         throw AppError.conflict('No se puede eliminar una obra que tiene funciones asociadas');
       }
+      logAudit({ userId, action: 'DELETE', entity: 'Event', entityId: id });
     },
   };
 }
