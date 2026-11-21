@@ -22,6 +22,7 @@ import { AdminArtistsPage } from './pages/admin/AdminArtistsPage';
 import { AdminEventsPage } from './pages/admin/AdminEventsPage';
 import { AdminPerformancesPage } from './pages/admin/AdminPerformancesPage';
 import { AdminPerformanceReservationsPage } from './pages/admin/AdminPerformanceReservationsPage';
+import { AdminLayout } from './pages/admin/AdminLayout';
 
 import {
   AdminPage,
@@ -63,28 +64,17 @@ export const routes: RouteObject[] = [
         element: <ProtectedRoute roles={['ARTIST']}><ArtistAgendaPage /></ProtectedRoute>,
       },
       {
-        path: 'admin/venues',
-        element: <ProtectedRoute roles={['ADMIN']}><AdminVenuesPage /></ProtectedRoute>,
-      },
-      {
-        path: 'admin/artists',
-        element: <ProtectedRoute roles={['ADMIN']}><AdminArtistsPage /></ProtectedRoute>,
-      },
-      {
-        path: 'admin/events',
-        element: <ProtectedRoute roles={['ADMIN']}><AdminEventsPage /></ProtectedRoute>,
-      },
-      {
-        path: 'admin/performances',
-        element: <ProtectedRoute roles={['ADMIN']}><AdminPerformancesPage /></ProtectedRoute>,
-      },
-      {
-        path: 'admin/performances/:id/reservations',
-        element: <ProtectedRoute roles={['ADMIN']}><AdminPerformanceReservationsPage /></ProtectedRoute>,
-      },
-      {
-        path: 'admin/*',
-        element: <ProtectedRoute roles={['ADMIN']}><AdminPage /></ProtectedRoute>,
+        path: 'admin',
+        element: <ProtectedRoute roles={['ADMIN']}><AdminLayout /></ProtectedRoute>,
+        children: [
+          { index: true, element: <AdminPage /> },
+          { path: 'venues', element: <AdminVenuesPage /> },
+          { path: 'artists', element: <AdminArtistsPage /> },
+          { path: 'events', element: <AdminEventsPage /> },
+          { path: 'performances', element: <AdminPerformancesPage /> },
+          { path: 'performances/:id/reservations', element: <AdminPerformanceReservationsPage /> },
+          { path: '*', element: <AdminPage /> },
+        ],
       },
 
       { path: '*', element: <NotFoundPage /> },
