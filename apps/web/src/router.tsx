@@ -6,6 +6,8 @@ import { EventDetailPage } from './pages/EventDetailPage';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { ProgramPage } from './pages/ProgramPage';
+import { VenueDetailPage } from './pages/VenueDetailPage';
+import { VenuesPage } from './pages/VenuesPage';
 import {
   AdminPage,
   ArtistAgendaPage,
@@ -13,8 +15,6 @@ import {
   MyReservationsPage,
   RegisterPage,
   ReservePage,
-  VenueDetailPage,
-  VenuesPage,
 } from './pages/placeholders';
 
 // Todas las rutas de la aplicación. Las URL están en español porque las ve el público.

@@ -6,6 +6,8 @@ import type {
   PerformanceFiltersResponse,
   PerformanceItem,
   PerformanceQuery,
+  VenueDetail,
+  VenueListItem,
 } from './types';
 
 export function getPerformances(query: PerformanceQuery = {}) {
@@ -37,4 +39,12 @@ export function getArtists(search?: string) {
 
 export function getArtistById(id: number | string) {
   return api.get<ArtistDetail>(`/artists/${id}`);
+}
+
+export function getVenues() {
+  return api.get<VenueListItem[]>('/venues');
+}
+
+export function getVenueById(id: number | string) {
+  return api.get<VenueDetail>(`/venues/${id}`);
 }
