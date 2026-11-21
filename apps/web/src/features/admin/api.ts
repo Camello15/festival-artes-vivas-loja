@@ -113,3 +113,67 @@ export function updateAdminEvent(id: number, data: AdminEventInput) {
 export function deleteAdminEvent(id: number) {
   return api.delete<void>(`/admin/events/${id}`);
 }
+
+export interface AdminPerformance {
+  id: number;
+  eventId: number;
+  venueId: number;
+  startsAt: string;
+  capacity: number;
+  status: 'SCHEDULED' | 'CANCELLED';
+  reservedSeats: number;
+  event: Pick<AdminEvent, 'id' | 'title' | 'discipline'>;
+  venue: Pick<AdminVenue, 'id' | 'name' | 'capacity'>;
+  _count: { reservations: number };
+}
+
+export interface AdminPerformanceInput {
+  eventId: number;
+  venueId: number;
+  startsAt: string;
+  capacity: number;
+  status: 'SCHEDULED' | 'CANCELLED';
+}
+
+export interface AdminPerformanceReservation {
+  id: number;
+  code: string;
+  quantity: number;
+  status: 'CONFIRMED' | 'CANCELLED';
+  createdAt: string;
+  user: { id: number; name: string };
+}
+
+export interface AdminPerformanceReservations {
+  performance: AdminPerformance;
+  totalConfirmed: number;
+  reservations: AdminPerformanceReservation[];
+}
+
+export function getAdminPerformances() {
+  return api.get<AdminPerformance[]>('/admin/performances');
+}
+
+export function getAdminPerformance(id: number) {
+  return api.get<AdminPerformance>(`/admin/performances/${id}`);
+}
+
+export function createAdminPerformance(data: AdminPerformanceInput) {
+  return api.post<AdminPerformance>('/admin/performances', data);
+}
+
+export function updateAdminPerformance(id: number, data: AdminPerformanceInput) {
+  return api.put<AdminPerformance>(`/admin/performances/${id}`, data);
+}
+
+export function cancelAdminPerformance(id: number) {
+  return api.patch<{ performance: AdminPerformance; cancelledReservations: number }>(`/admin/performances/${id}/cancel`);
+}
+
+export function deleteAdminPerformance(id: number) {
+  return api.delete<void>(`/admin/performances/${id}`);
+}
+
+export function getAdminPerformanceReservations(id: number) {
+  return api.get<AdminPerformanceReservations>(`/admin/performances/${id}/reservations`);
+}
