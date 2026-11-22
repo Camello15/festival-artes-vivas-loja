@@ -39,10 +39,11 @@ export function RegisterPage() {
 
   return (
     <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-      <h1 className="text-5xl font-black sm:text-6xl">Crear cuenta</h1>
+      <h1 id="register-title" className="text-5xl font-black sm:text-6xl">Crear cuenta</h1>
       <p className="mt-4 max-w-prose text-lg">Regístrate para reservar entradas y recibir tu código.</p>
 
-      <form className="mt-8 max-w-xl space-y-5 border-l-4 border-marigold bg-white p-6 sm:p-8" onSubmit={handleSubmit}>
+      <form className="mt-8 max-w-xl space-y-5 border-l-4 border-marigold bg-white p-6 sm:p-8" aria-labelledby="register-title" aria-busy={submitting} onSubmit={handleSubmit}>
+        <p className="sr-only" role="status" aria-live="polite">{submitting ? 'Creando cuenta…' : ''}</p>
         {error && (
           <p ref={errorRef} id="register-error" role="alert" tabIndex={-1} className="font-bold text-theater">
             {error}

@@ -60,6 +60,7 @@ describe('ReservePage', () => {
     renderRoute('/reservar/21');
 
     expect(await screen.findByRole('heading', { name: 'Voces del Sur' })).toBeInTheDocument();
+    expect(screen.getByRole('form', { name: 'Reservar entradas' })).toHaveAttribute('aria-busy', 'false');
     expect(screen.getByText('Teatro Bolívar')).toBeInTheDocument();
     expect(screen.getByText('7 de 50 entradas')).toBeInTheDocument();
     await user.selectOptions(screen.getByLabelText('Cantidad de entradas'), '2');

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
 import { ErrorMessage } from '../components/ui/ErrorMessage';
 import { Spinner } from '../components/ui/Spinner';
@@ -39,7 +39,8 @@ export function ReservePage() {
     void loadPerformance();
   }, [loadPerformance]);
 
-  async function handleReserve() {
+  async function handleReserve(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setSubmitting(true);
     setReserveError('');
     try {
@@ -100,7 +101,8 @@ export function ReservePage() {
       {maxQuantity === 0 ? (
         <p className="mt-6 border-l-4 border-theater bg-white px-5 py-4 font-bold" role="status">Esta función está agotada.</p>
       ) : (
-        <div className="mt-8 max-w-xl space-y-5">
+        <form className="mt-8 max-w-xl space-y-5" aria-label="Reservar entradas" aria-busy={submitting} onSubmit={(event) => void handleReserve(event)}>
+          <p className="sr-only" role="status" aria-live="polite">{submitting ? 'Confirmando reserva…' : ''}</p>
           <div>
             <label htmlFor="reservation-quantity" className="mb-1 block font-bold">Cantidad de entradas</label>
             <select
@@ -115,14 +117,13 @@ export function ReservePage() {
             </select>
           </div>
           <button
-            type="button"
-            onClick={() => void handleReserve()}
+            type="submit"
             disabled={submitting}
             className="rounded bg-marigold px-5 py-2.5 font-bold text-ink hover:bg-white disabled:opacity-60"
           >
             {submitting ? 'Confirmando…' : 'Confirmar reserva'}
           </button>
-        </div>
+        </form>
       )}
       <p className="mt-8"><Link to="/cartelera">Volver a la cartelera</Link></p>
     </section>

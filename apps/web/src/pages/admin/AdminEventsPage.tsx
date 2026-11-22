@@ -31,7 +31,12 @@ const eventFields = [
   { name: 'durationMinutes', label: 'Duración (minutos)', type: 'number' as const, min: 1, step: 1, required: true },
   { name: 'ageRating', label: 'Clasificación de edad', required: true },
   { name: 'imageUrl', label: 'URL de imagen', type: 'url' as const },
-  { name: 'artistIds', label: 'Artistas y compañías', type: 'multiselect' as const },
+  {
+    name: 'artistIds',
+    label: 'Artistas y compañías',
+    type: 'multiselect' as const,
+    description: 'Usa las flechas para recorrer las opciones y la barra espaciadora para alternar cada selección.',
+  },
 ];
 
 function toFormValues(event?: AdminEvent): EntityFormValues {

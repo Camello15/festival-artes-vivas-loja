@@ -39,10 +39,11 @@ export function LoginPage() {
 
   return (
     <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-      <h1 className="text-5xl font-black sm:text-6xl">Ingresar</h1>
+      <h1 id="login-title" className="text-5xl font-black sm:text-6xl">Ingresar</h1>
       <p className="mt-4 max-w-prose text-lg">Inicia sesión para reservar entradas y ver tus reservas.</p>
 
-      <form className="mt-8 max-w-xl space-y-5 border-l-4 border-marigold bg-white p-6 sm:p-8" onSubmit={handleSubmit}>
+      <form className="mt-8 max-w-xl space-y-5 border-l-4 border-marigold bg-white p-6 sm:p-8" aria-labelledby="login-title" aria-busy={submitting} onSubmit={handleSubmit}>
+        <p className="sr-only" role="status" aria-live="polite">{submitting ? 'Ingresando…' : ''}</p>
         {error && (
           <p ref={errorRef} id="login-error" role="alert" tabIndex={-1} className="font-bold text-theater">
             {error}

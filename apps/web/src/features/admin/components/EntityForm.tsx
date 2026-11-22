@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 
 export interface EntityFormField {
   name: string;
@@ -6,6 +6,7 @@ export interface EntityFormField {
   type?: 'text' | 'email' | 'url' | 'number' | 'date' | 'datetime-local' | 'textarea' | 'select' | 'multiselect';
   required?: boolean;
   placeholder?: string;
+  description?: string;
   min?: number;
   max?: number;
   step?: number;
@@ -33,10 +34,23 @@ export function EntityForm({
   onSubmit,
   onCancel,
 }: EntityFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
   const [values, setValues] = useState<EntityFormValues>(() => Object.fromEntries(
     fields.map((field) => [field.name, initialValues[field.name] ?? '']),
   ));
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const firstControl = formRef.current?.querySelector<HTMLElement>('input:not([type="hidden"]), select, textarea');
+    firstControl?.focus();
+  }, []);
+
+  useEffect(() => {
+    const firstErrorField = fields.find((field) => errors[field.name]);
+    if (!firstErrorField) return;
+    const control = formRef.current?.elements.namedItem(firstErrorField.name);
+    if (control instanceof HTMLElement) control.focus();
+  }, [errors, fields]);
 
   function updateValue(name: string, value: string) {
     setValues((current) => ({ ...current, [name]: value }));
@@ -72,17 +86,19 @@ export function EntityForm({
   }
 
   return (
-    <form noValidate onSubmit={handleSubmit} className="space-y-5">
+    <form ref={formRef} noValidate onSubmit={handleSubmit} aria-label={submitLabel} aria-busy={busy} className="space-y-5">
+      <p className="sr-only" role="status" aria-live="polite">{busy ? 'Guardando cambios…' : ''}</p>
       {fields.map((field) => {
         const error = validationErrors[field.name] || errors[field.name];
         const errorId = `${field.name}-error`;
+        const descriptionId = `${field.name}-description`;
         const commonProps = {
           id: field.name,
           name: field.name,
           required: field.required,
           value: values[field.name] ?? '',
           'aria-invalid': Boolean(error),
-          'aria-describedby': error ? errorId : undefined,
+          'aria-describedby': [field.description ? descriptionId : '', error ? errorId : ''].filter(Boolean).join(' ') || undefined,
           onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
             updateValue(field.name, event.currentTarget.value);
           },
@@ -123,6 +139,7 @@ export function EntityForm({
                 step={field.step}
               />
             )}
+            {field.description && <p id={descriptionId} className="mt-1 text-sm text-muted">{field.description}</p>}
             {error && <p id={errorId} role="alert" className="mt-1 font-bold text-theater">{error}</p>}
           </div>
         );

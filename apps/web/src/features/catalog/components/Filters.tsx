@@ -44,7 +44,7 @@ export function Filters({
             id="filtro-fecha"
             value={selectedDate}
             onChange={(e) => onChangeDate(e.target.value)}
-            className="rounded border border-line bg-white px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none"
+            className="rounded border border-line bg-white px-3 py-2 text-sm text-ink focus:border-teal"
           >
             <option value="">Todas las fechas</option>
             {dates.map((d) => (
@@ -63,7 +63,7 @@ export function Filters({
             id="filtro-disciplina"
             value={selectedDiscipline}
             onChange={(e) => onChangeDiscipline(e.target.value)}
-            className="rounded border border-line bg-white px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none"
+            className="rounded border border-line bg-white px-3 py-2 text-sm text-ink focus:border-teal"
           >
             <option value="">Todas las disciplinas</option>
             {disciplines.map((disc) => (
@@ -82,7 +82,7 @@ export function Filters({
             id="filtro-escenario"
             value={selectedVenueId}
             onChange={(e) => onChangeVenue(e.target.value)}
-            className="rounded border border-line bg-white px-3 py-2 text-sm text-ink focus:border-teal focus:outline-none"
+            className="rounded border border-line bg-white px-3 py-2 text-sm text-ink focus:border-teal"
           >
             <option value="">Todos los escenarios</option>
             {venues.map((v) => (

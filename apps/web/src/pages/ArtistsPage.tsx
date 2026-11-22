@@ -70,7 +70,7 @@ export function ArtistsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Ej. Colectivo, Teatro, Dúo…"
-          className="mt-1.5 w-full rounded border border-line bg-white px-3.5 py-2 text-sm text-ink focus:border-teal focus:outline-none"
+          className="mt-1.5 w-full rounded border border-line bg-white px-3.5 py-2 text-sm text-ink focus:border-teal"
         />
       </div>
 
