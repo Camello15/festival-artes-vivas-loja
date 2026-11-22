@@ -61,6 +61,7 @@ sequenceDiagram
     participant S as ReservationsService
     participant RP as ReservationsRepository
     participant DB as SQLite
+    participant L as logAudit / console.info
 
     U->>W: Elige 2 entradas y pulsa Confirmar
     W->>MW: POST /api/reservations con Bearer JWT
@@ -89,6 +90,156 @@ sequenceDiagram
             W-->>U: Confirmación con código
         end
     end
+```
+
+## Escenario C: autenticarse y autorizar una petición
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Usuario
+    participant W as SPA React
+    participant R as Router Express
+    participant AC as AuthController
+    participant AS as AuthService
+    participant UR as UsersRepository
+    participant MW as requireAuth / requireRole
+    participant DB as SQLite
+
+    U->>W: Envía correo y contraseña
+    W->>R: POST /api/auth/login
+    R->>AC: login(req, res)
+    AC->>AS: login(email, password)
+    AS->>UR: findByEmail(email)
+    UR->>DB: SELECT usuario
+    DB-->>AS: Usuario y passwordHash
+    AS->>AS: bcrypt.compare y firmar JWT (sub, role; 8 h)
+    AS-->>W: 200 { token, user }
+    W->>W: Guardar sesión en AuthContext/localStorage
+    U->>W: Solicita recurso protegido
+    W->>R: Petición con Authorization: Bearer JWT
+    R->>MW: requireAuth verifica firma, vencimiento, sub y role
+    alt Token ausente, inválido o expirado
+        MW-->>W: 401 UNAUTHORIZED
+    else Token válido
+        MW->>MW: requireRole comprueba el rol si la ruta lo exige
+        alt Rol insuficiente
+            MW-->>W: 403 FORBIDDEN
+        else Rol autorizado
+            MW-->>R: Continúa a la ruta protegida
+        end
+    end
+```
+
+## Escenario D: cancelar una reserva propia
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Usuario autenticado
+    participant W as MyReservationsPage
+    participant MW as requireAuth
+    participant C as ReservationsController
+    participant S as ReservationsService
+    participant RP as ReservationsRepository
+    participant L as logAudit / console.info
+    participant DB as SQLite
+
+    U->>W: Confirma cancelar una reserva
+    W->>MW: PATCH /api/reservations/:id/cancel con Bearer JWT
+    MW->>C: req.user.id
+    C->>S: cancel(userId, reservationId)
+    S->>DB: BEGIN TRANSACTION
+    S->>RP: findByIdForUser(id, userId)
+    RP->>DB: SELECT reserva propia y fecha de función
+
+    alt Reserva ausente o de otro usuario
+        DB-->>S: Sin resultado
+        S->>DB: ROLLBACK
+        S-->>W: 404
+    else Ya cancelada
+        S->>DB: COMMIT sin cambios (idempotente)
+        S->>L: logAudit(CANCEL, Reservation, id)
+        S-->>W: 200 reserva CANCELLED
+    else Función futura y reserva confirmada
+        S->>RP: markCancelled(id, userId)
+        RP->>DB: UPDATE status = CANCELLED
+        S->>DB: COMMIT
+        S->>L: logAudit(CANCEL, Reservation, id)
+        S-->>W: 200 reserva CANCELLED
+    end
+```
+
+## Escenario E: administrar una entidad o cancelar una función
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor A as Administrador
+    participant W as Panel admin
+    participant MW as requireAuth + requireRole(ADMIN)
+    participant C as AdminController
+    participant S as AdminService
+    participant RP as AdminRepository
+    participant DB as SQLite
+    participant L as logAudit / console.info
+
+    A->>W: Crea, edita o elimina una entidad
+    W->>MW: GET/POST/PUT/DELETE /api/admin/{resource}[/id]
+    MW->>MW: Verifica JWT y rol ADMIN
+    MW->>C: Continúa
+    C->>C: Valida parámetros y body con Zod
+    C->>S: Ejecuta operación
+    S->>RP: Aplica regla del recurso y persiste
+    RP->>DB: Consulta o mutación
+    alt Regla incumplida o dependencia impide eliminar
+        DB-->>S: Dependencia o error de validación
+        S-->>W: 409/400/404; no registra éxito
+    else Operación confirmada
+        DB-->>S: Entidad afectada
+        S->>L: Entrada JSON: timestamp, userId, action, entity, entityId
+        S-->>W: 200/201/204
+    end
+
+    opt Cancelar función con sus reservas
+        A->>W: Solicita cancelar función
+        W->>MW: PATCH /api/admin/performances/:id/cancel
+        MW->>C: Requiere ADMIN
+        C->>S: cancel(id, userId)
+        S->>DB: Transacción: función y reservas CONFIRMED a CANCELLED
+        DB-->>S: Commit atómico
+        S->>L: logAudit(CANCEL, Performance, id)
+        S-->>W: 200 función cancelada; historial conservado
+    end
+```
+
+## Escenario F: consultar la agenda del artista
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor A as Artista autenticado
+    participant W as ArtistAgendaPage
+    participant MW as requireAuth + requireRole(ARTIST)
+    participant C as ArtistAgendaController
+    participant S as ArtistAgendaService
+    participant AR as ArtistAgendaRepository
+    participant PR as PerformancesRepository
+    participant DB as SQLite
+
+    A->>W: Abre /mi-agenda
+    W->>MW: GET /api/me/artist/performances con Bearer JWT
+    MW->>MW: Verifica identidad y rol ARTIST
+    MW->>C: Continúa con req.user.id
+    C->>S: listForUser(userId)
+    S->>AR: findPerformancesForUser(userId)
+    AR->>DB: Busca obras y funciones del perfil vinculado
+    DB-->>AR: Funciones (vacío si no existe perfil vinculado)
+    S->>PR: getReservedSeatsByPerformance(ids)
+    PR->>DB: Agrega cantidad de reservas CONFIRMED
+    DB-->>S: Totales por función
+    S-->>W: 200 lista ordenada con reservedSeats
+    W-->>A: Presenta obra, escenario, fecha, estado y aforo
 ```
 
 ## Decisiones

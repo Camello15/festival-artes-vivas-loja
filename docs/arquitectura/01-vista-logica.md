@@ -54,8 +54,6 @@ classDiagram
         +DateTime startsAt
         +int capacity
         +PerformanceStatus status
-        +availableSeats() int
-        +isBookable(now) bool
     }
 
     class Reservation {
@@ -64,7 +62,6 @@ classDiagram
         +int quantity
         +ReservationStatus status
         +DateTime createdAt
-        +cancel()
     }
 
     class Role {
@@ -97,9 +94,9 @@ classDiagram
         CANCELLED
     }
 
-    Event "1" --> "1..*" Performance : se presenta en
+    Event "1" --> "0..*" Performance : se presenta en
     Venue "1" --> "0..*" Performance : alberga
-    Event "0..*" -- "1..*" Artist : presentada por
+    Event "0..*" -- "0..*" Artist : presentada por
     User "1" --> "0..*" Reservation : realiza
     Performance "1" --> "0..*" Reservation : recibe
     User "0..1" -- "0..1" Artist : cuenta de
@@ -117,12 +114,16 @@ classDiagram
   varias veces; la reserva siempre es para una **función**, no para la obra.
 - **El aforo pertenece a la función**, no solo al escenario: una misma sala puede montarse
   con distinta capacidad. La regla invariante es `Performance.capacity ≤ Venue.capacity`.
-- **`availableSeats()` es derivado**: `capacity − Σ quantity (reservas CONFIRMED)`. No se
-  almacena para evitar inconsistencias; lo calcula la capa de servicios.
+- **Disponibilidad y cancelación son operaciones de servicio**, no métodos del modelo:
+  `availableSeats` se deriva como `capacity − Σ quantity (reservas CONFIRMED)` y las
+  cancelaciones cambian el estado sin borrar el registro.
 - **Las reservas no se borran, se cancelan** (`status = CANCELLED`). Esto conserva el
   historial y hace la cancelación idempotente.
 - **`Artist` y `User` son conceptos distintos**: la mayoría de artistas no necesita cuenta. El
   vínculo opcional permite que un artista con rol `ARTIST` consulte su agenda.
+- **Las relaciones con dependencias se protegen al borrar**: la administración rechaza
+  (`409`) eliminar un artista con obras, un escenario con funciones, una obra con funciones
+  o una función con reservas, para conservar el catálogo y el historial de reservas.
 - **Enumeraciones** en inglés en el código; el frontend las traduce (principio V de la
   constitución).
 

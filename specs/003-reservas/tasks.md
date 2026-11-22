@@ -68,7 +68,7 @@ description: "Lista de tareas del Spec #3 — Reservas y administración"
 
 - [X] T032 Revisión de accesibilidad de formularios y diálogos con teclado
 - [X] T033 `npm run lint && npm run typecheck && npm test` en verde
-- [ ] T034 Actualizar las vistas de arquitectura si cambió algún flujo y abrir el PR hacia `develop`
+- [X] T034 Actualizar las vistas de arquitectura si cambió algún flujo y abrir el PR hacia `develop`
 
 ## Dependencias
 
