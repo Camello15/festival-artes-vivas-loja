@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router';
 import { MAIN_NAV } from './navigation';
+import { useAuth } from '../../features/auth/AuthContext';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   [
@@ -12,6 +13,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, loading, logout } = useAuth();
 
   // Cierra el menú móvil al cambiar de página.
   useEffect(() => {
@@ -51,14 +53,33 @@ export function Header() {
                 </NavLink>
               </li>
             ))}
-            <li className="md:ml-2">
-              <NavLink
-                to="/ingresar"
-                className="mt-2 inline-block rounded bg-marigold px-4 py-2 font-bold text-ink no-underline md:mt-0 md:py-1.5"
-              >
-                Ingresar
-              </NavLink>
-            </li>
+            {user?.role === 'ADMIN' && (
+              <li>
+                <NavLink to="/admin" className={navLinkClass}>Administración</NavLink>
+              </li>
+            )}
+            {!loading && !user && (
+              <li className="md:ml-2">
+                <NavLink
+                  to="/ingresar"
+                  className="mt-2 inline-block rounded bg-marigold px-4 py-2 font-bold text-ink no-underline md:mt-0 md:py-1.5"
+                >
+                  Ingresar
+                </NavLink>
+              </li>
+            )}
+            {user && (
+              <li className="flex items-center gap-3 pt-2 md:pt-0">
+                <span className="font-bold" aria-label={`Sesión iniciada como ${user.name}`}>{user.name}</span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="rounded bg-marigold px-4 py-1.5 font-bold text-ink hover:bg-white"
+                >
+                  Cerrar sesión
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
       </div>

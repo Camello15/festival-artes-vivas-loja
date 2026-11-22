@@ -149,4 +149,3 @@ export function VenueDetailPage() {
     </article>
   );
 }
-

@@ -20,11 +20,13 @@ flowchart TB
     subgraph WEB["apps/web/src"]
         direction TB
         pages["pages/<br/>una por ruta"]
-        features["features/<br/>catalog, auth, reservations, admin"]
+        features["features/<br/>catalog, auth, reservations, admin, artist-agenda"]
         components["components/<br/>layout y ui"]
         lib["lib/<br/>api.ts y format.ts"]
+        adminPages["pages/admin/<br/>AdminLayout y páginas por recurso"]
         pages --> features
         pages --> components
+        adminPages --> features
         features --> lib
         features --> components
     end
@@ -41,15 +43,21 @@ flowchart TB
         mw["middlewares/<br/>errorHandler, notFound, auth"]
         dom["domain/enums.ts"]
         prismaLib["lib/prisma.ts"]
+        auditLib["lib/auditLog.ts"]
+        admin["modules/admin/<br/>venues, artists, events, performances"]
+        modulesOthers["modules/<br/>health, festival, auth, users,<br/>reservations, artist-agenda,<br/>performances, events, artists, venues"]
         routes --> rt
+        routes --> admin
+        routes --> modulesOthers
         rp --> prismaLib
         sv --> dom
+        sv -. "audita operaciones correctas" .-> auditLib
         ct --> mw
     end
 
     web --> WEB
     api --> API
-    prismaLib --> schema[("prisma/schema.prisma<br/>migrations y seed")]
+    prismaLib --> schema[("apps/api/prisma/schema.prisma<br/>migrations y seed")]
 ```
 
 ## Reglas de dependencia entre capas
@@ -77,7 +85,8 @@ flowchart LR
 |---|---|---|
 | `health`, `festival` | `components/layout`, `pages/HomePage` | 1 |
 | `performances`, `events`, `artists`, `venues` | `features/catalog`, páginas de cartelera | 2 |
-| `auth`, `users`, `reservations`, `admin/*` | `features/auth`, `features/reservations`, `features/admin` | 3 |
+| `auth`, `users`, `reservations`, `admin/{venues,artists,events,performances}` | `features/auth`, `features/reservations`, `features/admin`, `pages/admin/*` | 3 |
+| `artist-agenda` (consume el repositorio de funciones públicas para disponibilidad reservada) | `features/artist-agenda`, `pages/ArtistAgendaPage.tsx` | 3 |
 
 ## Decisiones
 

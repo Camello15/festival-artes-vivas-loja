@@ -24,21 +24,6 @@ export const VenueDetailPage = () => (
 );
 
 // ---- Spec #3: Reservas y administración ----
-export const LoginPage = () => (
-  <ComingSoon spec={3} title="Ingresar" description="Inicia sesión para reservar entradas y ver tus reservas." />
-);
-export const RegisterPage = () => (
-  <ComingSoon spec={3} title="Crear cuenta" description="Regístrate con tu nombre, correo y una contraseña." />
-);
-export const ReservePage = () => (
-  <ComingSoon spec={3} title="Reservar entradas" description="Elige cuántas entradas quieres (hasta 6) y recibe tu código de reserva." />
-);
-export const MyReservationsPage = () => (
-  <ComingSoon spec={3} title="Mis reservas" description="Tus reservas con su código, y la opción de cancelarlas." />
-);
-export const ArtistAgendaPage = () => (
-  <ComingSoon spec={3} title="Mi agenda" description="Tus funciones como artista y cuántas entradas se han reservado." />
-);
 export const AdminPage = () => (
   <ComingSoon spec={3} title="Administración" description="Gestión de obras, funciones, artistas y escenarios, y lista de reservas por función." />
 );

@@ -77,8 +77,8 @@ flowchart LR
 | Vista | Qué elementos intervienen |
 |---|---|
 | **Lógica** | `User` crea una `Reservation` para una `Performance`; invariante `Σ quantity ≤ capacity`. |
-| **Procesos** | Secuencia *Reservar una entrada*: `requireAuth` → transacción con inserción y verificación posterior; `409` si no hay aforo. |
-| **Desarrollo** | `pages/ReservePage.tsx`, `features/auth/AuthContext.tsx`; `modules/reservations/*`, `middlewares/auth.ts`. |
+| **Procesos** | `POST /api/reservations` exige JWT válido con `requireAuth`; el service crea y valida en una transacción, que revierte si no hay aforo. `409` en ese caso. |
+| **Desarrollo** | `pages/ReservePage.tsx`, `features/auth/AuthContext.tsx`, `features/reservations/api.ts`; `modules/reservations/*`, `middlewares/auth.ts`. |
 | **Física** | El bloqueo de escritura de SQLite (un único proceso de API) garantiza la serialización. |
 
 ### Escenario 3 — Artista: "¿Cuántas personas reservaron para mi función?" (UC5 → UC8)
@@ -86,18 +86,45 @@ flowchart LR
 | Vista | Qué elementos intervienen |
 |---|---|
 | **Lógica** | `User` con rol `ARTIST` vinculado a un `Artist` → sus `Event` → `Performance` → reservas confirmadas. |
-| **Procesos** | `requireRole('ARTIST')` → service que agrega reservas por función. |
-| **Desarrollo** | `pages/ArtistAgendaPage.tsx`; endpoint `GET /api/me/artist/performances`. |
+| **Procesos** | `GET /api/me/artist/performances` pasa por `requireAuth` y `requireRole('ARTIST')`; el service filtra por el `userId` vinculado al perfil y agrega entradas confirmadas por función. Sin perfil vinculado devuelve una lista vacía. |
+| **Desarrollo** | `pages/ArtistAgendaPage.tsx`, `features/artist-agenda/api.ts`; `modules/artist-agenda/*`. |
 | **Física** | Igual que el escenario 1. |
 
 ### Escenario 4 — Administrador: "Programar una función nueva y revisar su asistencia" (UC9 → UC10)
 
 | Vista | Qué elementos intervienen |
 |---|---|
-| **Lógica** | Crear `Performance` para un `Event` existente en un `Venue`; regla `capacity ≤ venue.capacity`. Cancelar en lugar de borrar si hay reservas. |
-| **Procesos** | `requireRole('ADMIN')` → controller (Zod) → service (reglas) → repository; registro de auditoría en el log. |
-| **Desarrollo** | `pages/admin/*`, `features/admin/components/{DataTable,EntityForm}`; `modules/admin/performances/*`. |
+| **Lógica** | Crear `Performance` para un `Event` existente en un `Venue`; regla `capacity ≤ venue.capacity`. El CRUD rechaza eliminar artistas con obras, escenarios u obras con funciones y funciones con reservas (`409`). Para estas últimas se ofrece cancelación, que marca la función y sus reservas confirmadas sin borrar registros. |
+| **Procesos** | `/api/admin/*` aplica `requireAuth` y `requireRole('ADMIN')`; controller valida con Zod, service aplica reglas en transacción y repository persiste. Las mutaciones exitosas escriben una entrada estructurada de auditoría en `console.info`; los errores no se registran como exitosos. |
+| **Desarrollo** | `pages/admin/*`, `features/admin/api.ts`, componentes `{DataTable,EntityForm,ConfirmDialog}`; `modules/admin/{venues,artists,events,performances}/*`. La página de reservas de función usa `GET /api/admin/performances/:id/reservations`. |
 | **Física** | Igual que el escenario 1; la nueva función aparece de inmediato en la cartelera pública. |
+
+### Escenario 5 — Usuario: iniciar sesión y acceder según su rol (UC5)
+
+| Vista | Qué elementos intervienen |
+|---|---|
+| **Lógica** | `User` tiene uno de los roles `PUBLIC`, `ARTIST` o `ADMIN`; el perfil `Artist` asociado es opcional. |
+| **Procesos** | `POST /api/auth/login` verifica contraseña con bcrypt y devuelve JWT firmado con `sub` y `role`, válido 8 horas. `requireAuth` verifica el Bearer token; `requireRole` permite solo el rol exigido. El frontend protege `/mi-agenda` para `ARTIST` y `/admin/*` para `ADMIN`. |
+| **Desarrollo** | `modules/auth/*`, `middlewares/auth.ts`, `features/auth/{AuthContext,ProtectedRoute}.tsx`, `pages/LoginPage.tsx` y `router.tsx`. |
+| **Física** | El JWT circula en la cabecera `Authorization` entre navegador y API; los datos de usuario se consultan mediante Prisma/SQLite. |
+
+### Escenario 6 — Público: cancelar una reserva propia (UC7)
+
+| Vista | Qué elementos intervienen |
+|---|---|
+| **Lógica** | La `Reservation` conserva su registro y cambia de `CONFIRMED` a `CANCELLED`; solo su propietario puede cancelarla y solo antes del inicio de la función. |
+| **Procesos** | `PATCH /api/reservations/:id/cancel` requiere sesión, consulta la reserva por `reservationId` y `userId` dentro de la transacción, y devuelve `404` si no es propia o no existe. Una cancelación repetida es idempotente. |
+| **Desarrollo** | `pages/MyReservationsPage.tsx`, `features/reservations/api.ts`; `modules/reservations/*` y `middlewares/auth.ts`. |
+| **Física** | La actualización de estado se confirma en SQLite; la disponibilidad pública vuelve a contar solo reservas confirmadas. |
+
+### Escenario 7 — Administrador: cancelar una función (UC9)
+
+| Vista | Qué elementos intervienen |
+|---|---|
+| **Lógica** | `Performance.status` pasa a `CANCELLED`; sus reservas confirmadas también cambian a `CANCELLED` y permanecen almacenadas. |
+| **Procesos** | `PATCH /api/admin/performances/:id/cancel` requiere JWT y rol `ADMIN`; el service actualiza función y reservas en la misma transacción. Al completar, `logAudit` emite `userId`, acción `CANCEL`, entidad, id y fecha/hora a `console.info`. |
+| **Desarrollo** | `pages/admin/AdminPerformancesPage.tsx`, `features/admin/api.ts`, `modules/admin/performances/*`, `lib/auditLog.ts`. |
+| **Física** | La transacción se ejecuta en la API contra el archivo SQLite; no existe un almacén de auditoría separado. |
 
 ## Validación cruzada
 

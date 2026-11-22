@@ -71,4 +71,3 @@ description: "Lista de tareas del Spec #2 â€” Cartelera y detalle"
 - Phase 2 bloquea las Phases 3 a 6.
 - Las Phases 4, 5 y 6 son independientes entre sÃ­ tras la Phase 3.
 - El Spec #3 reutiliza `getReservedSeatsByPerformance`: conviene integrar la Phase 2 pronto en `develop`.
-

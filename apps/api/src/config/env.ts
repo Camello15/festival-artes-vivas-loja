@@ -15,6 +15,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, 'DATABASE_URL es obligatoria (ver apps/api/.env.example)'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   JWT_SECRET: z.string().default('cambia-este-secreto-en-local'),
+  JWT_EXPIRES_IN: z.string().default('8h'),
 });
 
 const parsed = envSchema.safeParse(process.env);
