@@ -107,6 +107,45 @@ classDiagram
     Reservation ..> ReservationStatus
 ```
 
+## Ciclo de vida de una función (`Performance`)
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> SCHEDULED : Admin crea la función<br/>fecha futura y aforo ≤ capacidad del escenario
+    SCHEDULED --> SCHEDULED : Admin edita<br/>aforo ≥ entradas confirmadas
+    SCHEDULED --> CANCELLED : Admin cancela antes del inicio<br/>sus reservas CONFIRMED pasan a CANCELLED
+    CANCELLED --> SCHEDULED : Admin la reprograma con fecha futura<br/>las reservas canceladas no se restauran
+    SCHEDULED --> [*] : Admin la elimina<br/>solo si no tiene reservas (si no, 409)
+    CANCELLED --> [*] : Admin la elimina<br/>solo si no tiene reservas (si no, 409)
+    note right of CANCELLED
+        No admite nuevas reservas (409)
+        y deja de sumar en la disponibilidad
+    end note
+```
+
+## Ciclo de vida de una reserva (`Reservation`)
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    state "Validación en transacción" as check
+    [*] --> check : POST /api/reservations<br/>INSERT primero (toma el bloqueo SQLite)
+    check --> CONFIRMED : Función SCHEDULED y futura<br/>Σ entradas ≤ aforo<br/>≤ 6 entradas por persona
+    check --> [*] : Regla incumplida<br/>ROLLBACK y 409 (no queda registro)
+    CONFIRMED --> CANCELLED : El propietario la cancela antes del inicio
+    CONFIRMED --> CANCELLED : El admin cancela la función
+    CANCELLED --> CANCELLED : Cancelar otra vez<br/>idempotente, sin cambios
+    note right of CANCELLED
+        El registro se conserva:
+        las reservas nunca se borran
+    end note
+```
+
+Los estados están en `apps/api/src/domain/enums.ts` y las transiciones en
+`modules/reservations/reservations.service.ts` y
+`modules/admin/performances/admin-performances.service.ts`.
+
 ## Decisiones
 
 - **`Event` (obra) vs. `Performance` (función).** Separamos la obra, que es el contenido

@@ -6,9 +6,9 @@ vista responde a las preocupaciones de un grupo de interesados distinto, y la vi
 
 | # | Vista | Pregunta que responde | Interesados | Diagrama | Archivo |
 |---|---|---|---|---|---|
-| 1 | Lógica | ¿Qué conceptos maneja el sistema y cómo se relacionan? | Usuarios finales, analistas | Clases | [01-vista-logica.md](01-vista-logica.md) |
+| 1 | Lógica | ¿Qué conceptos maneja el sistema y cómo se relacionan? | Usuarios finales, analistas | Clases y estados | [01-vista-logica.md](01-vista-logica.md) |
 | 2 | Procesos | ¿Cómo colaboran los componentes en tiempo de ejecución? | Integradores, rendimiento | Secuencia | [02-vista-procesos.md](02-vista-procesos.md) |
-| 3 | Desarrollo | ¿Cómo está organizado el código? | Programadores | Flowchart de módulos | [03-vista-desarrollo.md](03-vista-desarrollo.md) |
+| 3 | Desarrollo | ¿Cómo está organizado el código? | Programadores | Módulos, capas y componentes del frontend | [03-vista-desarrollo.md](03-vista-desarrollo.md) |
 | 4 | Física | ¿Dónde se ejecuta cada componente? | Operaciones | Despliegue | [04-vista-fisica.md](04-vista-fisica.md) |
 | +1 | Escenarios | ¿Qué casos de uso guían y validan las otras vistas? | Todos | Casos de uso | [05-escenarios.md](05-escenarios.md) |
 

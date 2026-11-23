@@ -88,6 +88,72 @@ flowchart LR
 | `auth`, `users`, `reservations`, `admin/{venues,artists,events,performances}` | `features/auth`, `features/reservations`, `features/admin`, `pages/admin/*` | 3 |
 | `artist-agenda` (consume el repositorio de funciones públicas para disponibilidad reservada) | `features/artist-agenda`, `pages/ArtistAgendaPage.tsx` | 3 |
 
+## Componentes del frontend
+
+La SPA también está en capas: las páginas componen la interfaz, cada *feature* encapsula
+las llamadas de su dominio y **todas** las peticiones pasan por `lib/api.ts`, que añade el
+token JWT y traduce el formato de error común de la API.
+
+```mermaid
+flowchart TB
+    router["router.tsx<br/>rutas en español"]
+
+    subgraph guards["Sesión y protección"]
+        authCtx["features/auth/AuthContext<br/>token y usuario en localStorage"]
+        protected["features/auth/ProtectedRoute<br/>roles ARTIST / ADMIN"]
+    end
+
+    subgraph pages["pages/ — una por ruta"]
+        direction LR
+        pPublic["HomePage · ProgramPage<br/>EventDetailPage · ArtistsPage<br/>ArtistDetailPage · VenuesPage<br/>VenueDetailPage"]
+        pAuth["LoginPage · RegisterPage"]
+        pRes["ReservePage<br/>MyReservationsPage"]
+        pArtist["ArtistAgendaPage"]
+        pAdmin["admin/AdminLayout<br/>Admin{Venues,Artists,Events,<br/>Performances}Page<br/>AdminPerformanceReservationsPage"]
+    end
+
+    subgraph features["features/ — lógica por dominio"]
+        direction LR
+        fFest["festival<br/>useFestivalSummary"]
+        fCat["catalog<br/>Filters · PerformanceCard<br/>AvailabilityBadge · VenueMap"]
+        fAuthApi["auth/api"]
+        fRes["reservations<br/>ConfirmDialog"]
+        fAgenda["artist-agenda"]
+        fAdmin["admin<br/>DataTable · EntityForm<br/>ConfirmDialog"]
+    end
+
+    subgraph shared["Compartido"]
+        direction LR
+        ui["components/layout · components/ui<br/>Header, Footer, Spinner, ErrorMessage"]
+        lib["lib/format · lib/labels<br/>fechas y traducción de enums"]
+    end
+
+    api["lib/api.ts<br/>único cliente HTTP"]
+    backend[["API REST /api<br/>vía proxy de Vite"]]
+
+    router --> guards
+    router --> pages
+    protected -. "protege" .-> pRes
+    protected -. "protege" .-> pArtist
+    protected -. "protege" .-> pAdmin
+    pPublic --> fFest
+    pPublic --> fCat
+    pAuth --> authCtx
+    authCtx --> fAuthApi
+    pRes --> fRes
+    pArtist --> fAgenda
+    pAdmin --> fAdmin
+    pages --> shared
+    authCtx -- "setAuthToken" --> api
+    fFest --> api
+    fCat --> api
+    fAuthApi --> api
+    fRes --> api
+    fAgenda --> api
+    fAdmin --> api
+    api -- "fetch JSON + Bearer JWT" --> backend
+```
+
 ## Decisiones
 
 - **Organización por módulo y luego por capa** (`modules/events/events.service.ts`) en
