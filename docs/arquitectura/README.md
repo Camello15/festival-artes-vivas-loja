@@ -6,11 +6,29 @@ vista responde a las preocupaciones de un grupo de interesados distinto, y la vi
 
 | # | Vista | Pregunta que responde | Interesados | Diagrama | Archivo |
 |---|---|---|---|---|---|
+| 0 | Negocio (contexto) | ¿Qué valor entrega el festival y qué capacidades necesita? | Organización, docente | Cadena de valor, flujo de valor, capacidades | [00-arquitectura-de-negocio.md](00-arquitectura-de-negocio.md) |
 | 1 | Lógica | ¿Qué conceptos maneja el sistema y cómo se relacionan? | Usuarios finales, analistas | Clases y estados | [01-vista-logica.md](01-vista-logica.md) |
-| 2 | Procesos | ¿Cómo colaboran los componentes en tiempo de ejecución? | Integradores, rendimiento | Secuencia | [02-vista-procesos.md](02-vista-procesos.md) |
-| 3 | Desarrollo | ¿Cómo está organizado el código? | Programadores | Módulos, capas y componentes del frontend | [03-vista-desarrollo.md](03-vista-desarrollo.md) |
+| 2 | Procesos | ¿Cómo colaboran los componentes en tiempo de ejecución? | Integradores, rendimiento | Secuencia por caso de uso (UC1–UC10) | [02-vista-procesos.md](02-vista-procesos.md) |
+| 3 | Desarrollo | ¿Cómo está organizado el código? | Programadores | Paquetes, componentes y capas | [03-vista-desarrollo.md](03-vista-desarrollo.md) |
 | 4 | Física | ¿Dónde se ejecuta cada componente? | Operaciones | Despliegue | [04-vista-fisica.md](04-vista-fisica.md) |
 | +1 | Escenarios | ¿Qué casos de uso guían y validan las otras vistas? | Todos | Casos de uso | [05-escenarios.md](05-escenarios.md) |
+
+## Diagramas entregables, en orden de trazabilidad
+
+Cada diagrama se deriva del anterior: el negocio define las capacidades, las capacidades los
+casos de uso y los casos de uso guían el diseño.
+
+| # | Diagrama | Vista 4+1 | Dónde está |
+|---|---|---|---|
+| 1 | Cadena de valor | Negocio (contexto) | [00 › Cadena de valor](00-arquitectura-de-negocio.md#1-cadena-de-valor) |
+| 2 | Flujo de valor | Negocio (contexto) | [00 › Flujo de valor](00-arquitectura-de-negocio.md#2-flujo-de-valor) |
+| 3 | Mapa de capacidades | Negocio (contexto) | [00 › Mapa de capacidades](00-arquitectura-de-negocio.md#3-mapa-de-capacidades) |
+| 4 | Casos de uso | +1 Escenarios | [05 › Casos de uso](05-escenarios.md#casos-de-uso) |
+| 5 | Clases (y estados) | Lógica | [01 › Diagrama de clases](01-vista-logica.md#diagrama-de-clases-del-dominio) |
+| 6 | Secuencia por cada caso de uso (10) | Procesos | [02 › Secuencias UC1–UC10](02-vista-procesos.md#diagramas-de-secuencia-por-caso-de-uso) |
+| 7 | Componentes | Desarrollo | [03 › Componentes del sistema](03-vista-desarrollo.md#diagrama-de-componentes-del-sistema) y [del frontend](03-vista-desarrollo.md#componentes-internos-del-frontend) |
+| 8 | Paquetes | Desarrollo | [03 › Diagrama de paquetes](03-vista-desarrollo.md#diagrama-de-paquetes) |
+| 9 | Despliegue | Física | [04 › Diagrama de despliegue](04-vista-fisica.md#diagrama-de-despliegue-local-modo-desarrollo) |
 
 Las decisiones que dan forma a estas vistas están registradas como ADR en
 [`../adr/`](../adr/README.md).

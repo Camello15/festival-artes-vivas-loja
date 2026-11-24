@@ -48,6 +48,9 @@ flowchart LR
     UC9 -. "incluye" .-> UC5
 ```
 
+Los casos de uso salen del [mapa de capacidades](00-arquitectura-de-negocio.md#3-mapa-de-capacidades)
+y cada uno tiene su [diagrama de secuencia](02-vista-procesos.md#diagramas-de-secuencia-por-caso-de-uso).
+
 | Caso de uso | Actor | Spec | Prioridad |
 |---|---|---|---|
 | UC1 Consultar cartelera | Público | 2 | P1 |
