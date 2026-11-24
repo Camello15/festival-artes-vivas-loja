@@ -1,0 +1,92 @@
+{
+  "repo_notes": [
+    {
+      "content": "Escribe toda la wiki en español. Es un proyecto académico (UTPL, Arquitectura de Software) cuyo entregable principal es la arquitectura documentada con el modelo 4+1 vistas de Kruchten. La fuente de verdad de la arquitectura está en docs/arquitectura/ (00 a 05 y README.md) y en docs/adr/. Reutiliza y conserva los diagramas Mermaid de esos archivos en lugar de inventar otros, y respeta el orden de trazabilidad: cadena de valor -> flujo de valor -> mapa de capacidades -> casos de uso -> clases -> secuencia por caso de uso -> componentes -> paquetes -> despliegue. La metodología es Specification-Driven Development con GitHub Spec Kit (specs/001-base, 002-cartelera, 003-reservas y .specify/memory/constitution.md). Equipo: Camilo Velepucha (Spec 1, base y líder técnico), Cristina Feijo (Spec 2, cartelera), Bryan Villa (Spec 3, reservas y administración)."
+    }
+  ],
+  "pages": [
+    {
+      "title": "Visión general del Festival de Artes Vivas Loja",
+      "purpose": "Presentar el caso, los actores (Público, Artista, Administrador), el stack y el estilo cliente-servidor con backend en capas.",
+      "page_notes": [{ "content": "Basarse en README.md y docs/arquitectura/README.md. Incluir el diagrama general del sistema y la tabla de diagramas entregables." }]
+    },
+    {
+      "title": "Modelo 4+1 vistas",
+      "purpose": "Explicar cómo se organiza la documentación de arquitectura y qué pregunta responde cada vista.",
+      "page_notes": [{ "content": "Usar la tabla de vistas y la tabla 'Diagramas entregables, en orden de trazabilidad' de docs/arquitectura/README.md." }]
+    },
+    {
+      "title": "Arquitectura de negocio: cadena de valor, flujo de valor y capacidades",
+      "purpose": "Mostrar el valor que entrega el festival y las capacidades de negocio que soporta el sistema.",
+      "parent": "Modelo 4+1 vistas",
+      "page_notes": [{ "content": "Fuente: docs/arquitectura/00-arquitectura-de-negocio.md. Incluir los tres diagramas y la tabla de trazabilidad capacidad -> caso de uso -> módulo." }]
+    },
+    {
+      "title": "Vista de escenarios (+1): casos de uso",
+      "purpose": "Describir los casos de uso UC1-UC10, sus actores y cómo recorren las otras cuatro vistas.",
+      "parent": "Modelo 4+1 vistas",
+      "page_notes": [{ "content": "Fuente: docs/arquitectura/05-escenarios.md. Incluir el diagrama de casos de uso con «include» y «extend» y la validación cruzada." }]
+    },
+    {
+      "title": "Vista lógica: clases y estados del dominio",
+      "purpose": "Explicar las entidades User, Artist, Event, Venue, Performance y Reservation, sus relaciones y ciclos de vida.",
+      "parent": "Modelo 4+1 vistas",
+      "page_notes": [{ "content": "Fuente: docs/arquitectura/01-vista-logica.md y apps/api/prisma/schema.prisma. Incluir el diagrama de clases y los dos diagramas de estados." }]
+    },
+    {
+      "title": "Vista de procesos: secuencias por caso de uso",
+      "purpose": "Mostrar en tiempo de ejecución cada caso de uso de UC1 a UC10, incluida la reserva concurrente y el manejo de errores.",
+      "parent": "Modelo 4+1 vistas",
+      "page_notes": [{ "content": "Fuente: docs/arquitectura/02-vista-procesos.md. Incluir los diez diagramas de secuencia y explicar 'escribir primero y verificar después' dentro de la transacción y la consulta agregada GROUP BY que evita N+1." }]
+    },
+    {
+      "title": "Vista de desarrollo: paquetes, componentes y capas",
+      "purpose": "Explicar la organización del monorepo, las reglas de dependencia entre capas y los componentes con sus interfaces REST.",
+      "parent": "Modelo 4+1 vistas",
+      "page_notes": [{ "content": "Fuente: docs/arquitectura/03-vista-desarrollo.md. Incluir el diagrama de paquetes, el de componentes del sistema, el de componentes del frontend y la tabla de reglas de capas routes -> controllers -> services -> repositories." }]
+    },
+    {
+      "title": "Vista física: despliegue",
+      "purpose": "Mostrar en qué nodos y procesos se ejecuta cada componente, en local, con Docker y la referencia de producción.",
+      "parent": "Modelo 4+1 vistas",
+      "page_notes": [{ "content": "Fuente: docs/arquitectura/04-vista-fisica.md. Incluir los diagramas de despliegue y la tabla de nodos y artefactos." }]
+    },
+    {
+      "title": "Decisiones de arquitectura (ADR)",
+      "purpose": "Resumir cada ADR con su contexto, decisión, alternativas y consecuencias.",
+      "page_notes": [{ "content": "Fuente: docs/adr/0001 a 0006. Destacar ADR-0006 (control de aforo concurrente con SQLite)." }]
+    },
+    {
+      "title": "Control de aforo concurrente",
+      "purpose": "Explicar en detalle cómo el sistema garantiza que nunca se supera el aforo de una función.",
+      "parent": "Decisiones de arquitectura (ADR)",
+      "page_notes": [{ "content": "Fuentes: apps/api/src/modules/reservations/reservations.service.ts, docs/adr/0006-control-de-aforo.md y la secuencia UC6. Explicar el INSERT antes del SUM en la transacción, el bloqueo de un único escritor de SQLite, el ROLLBACK con 409 y el límite de 6 entradas por persona." }]
+    },
+    {
+      "title": "Backend: API REST en capas",
+      "purpose": "Describir los módulos de apps/api, los endpoints públicos, de reservas y de administración, los middlewares y el formato común de errores.",
+      "page_notes": [{ "content": "Fuentes: apps/api/src/routes/index.ts, modules/*, middlewares/*, errors/AppError.ts, lib/auditLog.ts." }]
+    },
+    {
+      "title": "Autenticación y autorización",
+      "purpose": "Explicar el registro, el inicio de sesión con JWT de 8 horas y la autorización por roles PUBLIC, ARTIST y ADMIN.",
+      "parent": "Backend: API REST en capas",
+      "page_notes": [{ "content": "Fuentes: modules/auth, middlewares/auth.ts y, en el frontend, features/auth (AuthContext y ProtectedRoute)." }]
+    },
+    {
+      "title": "Frontend: SPA React",
+      "purpose": "Describir las páginas, las features por dominio y el cliente HTTP único lib/api.ts.",
+      "page_notes": [{ "content": "Fuentes: apps/web/src/router.tsx, pages/, features/ y lib/api.ts." }]
+    },
+    {
+      "title": "Metodología SDD y flujo de ramas",
+      "purpose": "Explicar cómo se trabajó con Spec Kit (constitución, spec, plan, tasks) y la estrategia de ramas feature -> develop -> main con PR y CI.",
+      "page_notes": [{ "content": "Fuentes: .specify/memory/constitution.md, specs/*, docs/adr/0004-estrategia-de-ramas-y-sdd.md, CONTRIBUTING.md y .github/workflows/ci.yml. Indicar qué integrante fue responsable de cada spec." }]
+    },
+    {
+      "title": "Instalación, pruebas y calidad",
+      "purpose": "Explicar cómo ejecutar el proyecto en local, los datos de ejemplo y las pruebas con Vitest.",
+      "page_notes": [{ "content": "Fuentes: README.md, package.json, apps/api/prisma/seed.ts y las carpetas de pruebas apps/api/tests y apps/web/src/test." }]
+    }
+  ]
+}
