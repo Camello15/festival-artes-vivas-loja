@@ -113,7 +113,7 @@ festival-artes-vivas-loja/
 │   │   ├── prisma/          # schema.prisma, migraciones y seed
 │   │   ├── src/
 │   │   │   ├── modules/     # un módulo por recurso: routes → controller → service → repository
-│   │   │   ├── middlewares/ # errores, rutas no encontradas (y autenticación en el Spec #3)
+│   │   │   ├── middlewares/ # autenticación JWT y roles, errores, rutas no encontradas
 │   │   │   ├── domain/      # enumeraciones del dominio
 │   │   │   └── config/ lib/ errors/
 │   │   └── tests/

@@ -47,6 +47,7 @@ classDiagram
         +float longitude
         +int capacity
         +string description
+        +string imageUrl
     }
 
     class Performance {
