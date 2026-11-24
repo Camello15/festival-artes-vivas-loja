@@ -220,10 +220,10 @@ Video de 5 minutos con la participación de los tres integrantes:
 
 | Minuto | Contenido | Presenta |
 |---|---|---|
-| 0:00 – 1:30 | Caso, arquitectura 4+1 y decisiones (ADR) | Camilo Velepucha |
-| 1:30 – 3:00 | Cartelera, detalle de obras, artistas y escenarios | Cristina Feijo |
-| 3:00 – 4:30 | Reservas con control de aforo y panel de administración | Bryan Villa |
-| 4:30 – 5:00 | Metodología SDD, flujo de ramas y conclusiones | Los tres |
+| 0:00 – 1:40 | Caso, modelo 4+1, ADR, vista lógica y de desarrollo | Camilo Velepucha |
+| 1:40 – 3:00 | Cartelera: secuencia de consulta, N+1 evitado y escenarios (+1) | Cristina Feijo |
+| 3:00 – 4:20 | Reservas: control de aforo concurrente, vista física y estados | Bryan Villa |
+| 4:20 – 5:00 | Metodología SDD, flujo de ramas y cierre | Los tres |
 
 ## Licencia
 
