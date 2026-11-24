@@ -43,10 +43,22 @@ flowchart LR
     admin --- UC9
     admin --- UC10
 
-    UC6 -. "incluye" .-> UC5
-    UC2 -. "extiende" .-> UC6
-    UC9 -. "incluye" .-> UC5
+    UC6 -. "«include»" .-> UC5
+    UC7 -. "«include»" .-> UC5
+    UC8 -. "«include»" .-> UC5
+    UC9 -. "«include»" .-> UC5
+    UC10 -. "«include»" .-> UC5
+    UC6 -. "«extend»<br/>botón Reservar" .-> UC2
+    UC10 -. "«extend»<br/>Ver reservas" .-> UC9
 ```
+
+- **«include»**: reservar, ver mis reservas, la agenda y la administración siempre requieren
+  una sesión iniciada (UC5); la API lo garantiza con `requireAuth`.
+- **«extend»**: *Reservar* es una extensión opcional de *Ver detalle de obra* (el botón
+  Reservar de cada función), y *Ver reservas de una función* extiende la gestión de funciones.
+
+Los casos de uso salen del [mapa de capacidades](00-arquitectura-de-negocio.md#3-mapa-de-capacidades)
+y cada uno tiene su [diagrama de secuencia](02-vista-procesos.md#diagramas-de-secuencia-por-caso-de-uso).
 
 | Caso de uso | Actor | Spec | Prioridad |
 |---|---|---|---|

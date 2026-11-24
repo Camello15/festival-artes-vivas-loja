@@ -4,7 +4,7 @@
 cómo se comunican.
 **Interesados**: quien instala y opera el sistema (en este proyecto, el propio equipo).
 
-## Despliegue en local (modo desarrollo)
+## Diagrama de despliegue: local (modo desarrollo)
 
 Es el entorno objetivo del prototipo: todo corre en la máquina del desarrollador, incluida
 una Chromebook con el entorno Linux activado.
@@ -28,12 +28,23 @@ flowchart LR
         file[("apps/api/prisma/dev.db")]
     end
 
+    osm["«nodo externo»<br/>openstreetmap.org<br/>mapa embebido"]
+
     browser -- "HTTP :5173" --> spa
     browser -- "HTTP /api/*" --> proxy
     proxy -- "HTTP :3000" --> apiapp
     apiapp --> sqlite
     sqlite -- "lectura y escritura" --> file
+    browser -. "HTTPS iframe (VenueMap)" .-> osm
 ```
+
+| Nodo | Artefacto desplegado | Puerto / protocolo |
+|---|---|---|
+| Dispositivo del usuario | Navegador que ejecuta la SPA | HTTP hacia :5173 |
+| Proceso Vite | `apps/web` (bundle en memoria) y proxy `/api` | :5173 |
+| Proceso API | `apps/api` con `tsx` y Prisma Client | :3000 |
+| Archivo | `apps/api/prisma/dev.db` (SQLite) | E/S de archivo local |
+| OpenStreetMap | Mapa de escenarios (externo, sin datos del usuario) | HTTPS |
 
 ## Despliegue alternativo con Docker Compose (opcional)
 

@@ -11,9 +11,9 @@ decisión cambia, se escribe un ADR nuevo que lo **reemplaza**.
 | [0003](0003-base-de-datos-sqlite-prisma.md) | Base de datos: SQLite con Prisma ORM | Aceptado | 2026-11-18 |
 | [0004](0004-estrategia-de-ramas-y-sdd.md) | Estrategia de ramas y Specification-Driven Development | Aceptado | 2026-11-18 |
 | [0005](0005-monorepo-npm-workspaces.md) | Monorepo con npm workspaces | Aceptado | 2026-11-18 |
+| [0006](0006-control-de-aforo.md) | Control de aforo concurrente con SQLite | Aceptado | 2026-11-21 |
 
-Los ADR futuros previstos en los specs: `0006-control-de-aforo` (Spec #3) y
-`0007-autenticacion-jwt` (Spec #3).
+Previsto: `0007-autenticacion-jwt` (Spec #3).
 
 ## Cómo agregar un ADR
 

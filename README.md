@@ -113,7 +113,7 @@ festival-artes-vivas-loja/
 │   │   ├── prisma/          # schema.prisma, migraciones y seed
 │   │   ├── src/
 │   │   │   ├── modules/     # un módulo por recurso: routes → controller → service → repository
-│   │   │   ├── middlewares/ # errores, rutas no encontradas (y autenticación en el Spec #3)
+│   │   │   ├── middlewares/ # autenticación JWT y roles, errores, rutas no encontradas
 │   │   │   ├── domain/      # enumeraciones del dominio
 │   │   │   └── config/ lib/ errors/
 │   │   └── tests/
@@ -152,10 +152,11 @@ flowchart LR
 
 | Vista | Documento |
 |---|---|
-| Índice y diagrama general | [docs/arquitectura/README.md](docs/arquitectura/README.md) |
-| 1. Vista lógica (clases del dominio) | [01-vista-logica.md](docs/arquitectura/01-vista-logica.md) |
-| 2. Vista de procesos (secuencias de cartelera y reserva) | [02-vista-procesos.md](docs/arquitectura/02-vista-procesos.md) |
-| 3. Vista de desarrollo (módulos y capas) | [03-vista-desarrollo.md](docs/arquitectura/03-vista-desarrollo.md) |
+| Índice, diagrama general y lista de diagramas entregables | [docs/arquitectura/README.md](docs/arquitectura/README.md) |
+| 0. Arquitectura de negocio (cadena de valor, flujo de valor, mapa de capacidades) | [00-arquitectura-de-negocio.md](docs/arquitectura/00-arquitectura-de-negocio.md) |
+| 1. Vista lógica (clases y estados del dominio) | [01-vista-logica.md](docs/arquitectura/01-vista-logica.md) |
+| 2. Vista de procesos (una secuencia por caso de uso, UC1–UC10) | [02-vista-procesos.md](docs/arquitectura/02-vista-procesos.md) |
+| 3. Vista de desarrollo (paquetes, componentes y capas) | [03-vista-desarrollo.md](docs/arquitectura/03-vista-desarrollo.md) |
 | 4. Vista física (despliegue) | [04-vista-fisica.md](docs/arquitectura/04-vista-fisica.md) |
 | +1. Escenarios (casos de uso) | [05-escenarios.md](docs/arquitectura/05-escenarios.md) |
 
@@ -168,6 +169,7 @@ flowchart LR
 | [0003](docs/adr/0003-base-de-datos-sqlite-prisma.md) | SQLite con Prisma ORM |
 | [0004](docs/adr/0004-estrategia-de-ramas-y-sdd.md) | Estrategia de ramas y SDD con Spec Kit |
 | [0005](docs/adr/0005-monorepo-npm-workspaces.md) | Monorepo con npm workspaces |
+| [0006](docs/adr/0006-control-de-aforo.md) | Control de aforo concurrente con SQLite |
 
 ## Metodología: Specification-Driven Development
 
@@ -218,10 +220,10 @@ Video de 5 minutos con la participación de los tres integrantes:
 
 | Minuto | Contenido | Presenta |
 |---|---|---|
-| 0:00 – 1:30 | Caso, arquitectura 4+1 y decisiones (ADR) | Camilo Velepucha |
-| 1:30 – 3:00 | Cartelera, detalle de obras, artistas y escenarios | Cristina Feijo |
-| 3:00 – 4:30 | Reservas con control de aforo y panel de administración | Bryan Villa |
-| 4:30 – 5:00 | Metodología SDD, flujo de ramas y conclusiones | Los tres |
+| 0:00 – 1:40 | Caso, modelo 4+1, ADR, vista lógica y de desarrollo | Camilo Velepucha |
+| 1:40 – 3:00 | Cartelera: secuencia de consulta, N+1 evitado y escenarios (+1) | Cristina Feijo |
+| 3:00 – 4:20 | Reservas: control de aforo concurrente, vista física y estados | Bryan Villa |
+| 4:20 – 5:00 | Metodología SDD, flujo de ramas y cierre | Los tres |
 
 ## Licencia
 
